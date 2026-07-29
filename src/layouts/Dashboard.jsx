@@ -32,46 +32,53 @@ const Dashboard = () => {
         window.location.replace('/SignIn');
     };
 
+    const navLinkClass = ({ isActive }) => 
+        `flex items-center gap-2 mb-3.5 w-fit transition-all ${
+            isActive 
+            ? 'text-[#1e74d2] font-bold drop-shadow-sm' 
+            : 'text-gray-600 hover:text-[#1e74d2] font-medium'
+        }`;
+
     const adminSidebarLinks = (
         <>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/admin/dashboard"><MdOutlineDashboard size={20} /> Overview</Link>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/admin/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Organizer Profile</Link>
+            <NavLink end className={navLinkClass} to="/admin/dashboard"><MdOutlineDashboard size={20} /> Overview</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Organizer Profile</NavLink>
             
-            <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
               Smart Hospital OPD
             </div>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/admin/dashboard/ManageQueueSystem"><MdOutlineSettings size={20} />Queue Management</Link>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/admin/dashboard/QueueAnalytics"><BsCheck2Square size={20} />Queue Analytics</Link>
+            <NavLink className={navLinkClass} to="/admin/dashboard/ManageQueueSystem"><MdOutlineSettings size={20} />Queue Management</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/QueueAnalytics"><BsCheck2Square size={20} />Queue Analytics</NavLink>
             
-            <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
               Camp Management
             </div>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/admin/dashboard/AddACamp"><MdOutlineAddLocation size={20} />Add a Camp</Link>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/admin/dashboard/ManageCamps"><MdOutlineSettings size={20} />Manage Camps</Link>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/admin/dashboard/ManageRegisteredCamps"><BsCheck2Square size={20} />Manage Registrations</Link>
+            <NavLink className={navLinkClass} to="/admin/dashboard/AddACamp"><MdOutlineAddLocation size={20} />Add a Camp</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/ManageCamps"><MdOutlineSettings size={20} />Manage Camps</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/ManageRegisteredCamps"><BsCheck2Square size={20} />Manage Registrations</NavLink>
         </>
     );
 
     const doctorSidebarLinks = (
         <>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/doctor/dashboard"><MdOutlineDashboard size={20} />Live Patient Queue</Link>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/doctor/dashboard/QueueAnalytics"><BsCheck2Square size={20} />Queue Analytics</Link>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/doctor/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Doctor Profile</Link>
+            <NavLink end className={navLinkClass} to="/doctor/dashboard"><MdOutlineDashboard size={20} />Live Patient Queue</NavLink>
+            <NavLink className={navLinkClass} to="/doctor/dashboard/QueueAnalytics"><BsCheck2Square size={20} />Queue Analytics</NavLink>
+            <NavLink className={navLinkClass} to="/doctor/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Doctor Profile</NavLink>
         </>
     );
 
     const userSidebarLinks = (
         <>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/user/dashboard/MyQueueTokens"><BsCheck2Square size={20} />My OPD Queue Tokens</Link>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/user/dashboard/BrowseDoctors"><MdOutlineAddLocation size={20} />Browse OPD Doctors</Link>
+            <NavLink className={navLinkClass} to="/user/dashboard/MyQueueTokens"><BsCheck2Square size={20} />My OPD Queue Tokens</NavLink>
+            <NavLink className={navLinkClass} to="/user/dashboard/BrowseDoctors"><MdOutlineAddLocation size={20} />Browse OPD Doctors</NavLink>
             
-            <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
               Participant Account
             </div>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/user/dashboard"><MdOutlineDashboard size={20} /> Analytics</Link>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/user/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Participant Profile</Link>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/user/dashboard/RegisteredCamps"><MdOutlineAddLocation size={20} />Registered Camps</Link>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/user/dashboard/PaymentHistory"><MdOutlineSettings size={20} />Payment History</Link>
+            <NavLink end className={navLinkClass} to="/user/dashboard"><MdOutlineDashboard size={20} /> Analytics</NavLink>
+            <NavLink className={navLinkClass} to="/user/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Participant Profile</NavLink>
+            <NavLink className={navLinkClass} to="/user/dashboard/RegisteredCamps"><MdOutlineAddLocation size={20} />Registered Camps</NavLink>
+            <NavLink className={navLinkClass} to="/user/dashboard/PaymentHistory"><MdOutlineSettings size={20} />Payment History</NavLink>
         </>
     );
 

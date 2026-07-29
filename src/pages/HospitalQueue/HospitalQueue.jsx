@@ -30,7 +30,7 @@ const HospitalQueue = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('available');
-  const [layout, setLayout] = useState('grid-cols-1 md:grid-cols-2 lg:grid-cols-3');
+  const [layout, setLayout] = useState('grid-cols-1 md:grid-cols-2');
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
 
@@ -318,10 +318,10 @@ const HospitalQueue = () => {
                     </div>
                   </div>
 
-                  <div className="px-6 pb-6 pt-4 border-t border-slate-100 mt-4 flex justify-between items-center">
+                  <div className="px-6 pb-6 pt-4 border-t border-slate-100 mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div className="flex flex-col text-sm text-slate-500 font-medium">
                       <p>Queue Status</p>                    
-                      <span className="flex items-center font-bold text-slate-700">
+                      <span className="flex items-center gap-1 font-bold text-slate-700">
                         <Icons.Participants />{waitingCount} Waiting ({estWaitMinutes} mins)
                       </span>
                     </div>
@@ -329,7 +329,7 @@ const HospitalQueue = () => {
                     <button
                       onClick={() => handleOpenTokenModal(doc)}
                       disabled={!doc.isAvailable}
-                      className="bg-[#1e74d2] text-white font-semibold px-5 py-2.5 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#185dab] focus:outline-none focus:ring-2 focus:ring-[#1e74d2] focus:ring-offset-2 flex items-center group-hover:pl-4 group-hover:pr-6 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="bg-[#1e74d2] text-white font-semibold px-5 py-2.5 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#185dab] focus:outline-none focus:ring-2 focus:ring-[#1e74d2] focus:ring-offset-2 flex items-center gap-2 group-hover:pl-4 group-hover:pr-6 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap w-full sm:w-auto justify-center"
                     >
                       Get Token
                       <Icons.ArrowRight />

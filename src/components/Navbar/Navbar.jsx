@@ -7,24 +7,19 @@ import { Bounce, toast } from "react-toastify";
 
 const Navbar = () => {
 
-    const { user } =useAuth()
+    const { user, logOut } = useAuth();
     
     const handleSignOut = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        localStorage.clear();
+        if (logOut) logOut();
         toast.success('Sign Out Successful!', {
           position: 'top-left',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'colored',
+          autoClose: 2000,
+          theme: 'light',
           transition: Bounce,
         });
-        window.location.href = '/';
-  };
+        window.location.replace('/SignIn');
+    };
 
     const links = <>
         <NavLink to='/'>Home</NavLink>
@@ -85,7 +80,7 @@ const Navbar = () => {
                 </li>
                 <hr />
                 <li>
-                  <Link to="/Dashboard" className="text-base">Dashboard</Link>
+                  <Link to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'doctor' ? '/doctor/dashboard' : '/user/dashboard'} className="text-base">Dashboard</Link>
                 </li>
                 <li>
                   <button onClick={handleSignOut} className="text-base hover:bg-red-50 text-red-300">Sign Out</button>

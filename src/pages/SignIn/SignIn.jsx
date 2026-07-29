@@ -28,8 +28,12 @@ const SignIn = () => {
             theme: "colored",
             transition: Bounce,
           });
+          
+          let navPath = '/user/dashboard';
+          if (email.toLowerCase().includes('admin')) navPath = '/admin/dashboard';
+          if (email.toLowerCase().includes('doctor')) navPath = '/doctor/dashboard';
 
-          navigate(location?.state || '/');
+          navigate(location?.state?.from?.pathname || navPath);
         })
         .catch(error => {
           console.log(error);          

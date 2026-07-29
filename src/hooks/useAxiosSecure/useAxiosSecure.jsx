@@ -27,15 +27,10 @@ const useAxiosSecure = () => {
                 return { data: mockDb.users };
             }
             if (url.includes('/participants/email/')) {
-                const userRegs = mockDb.registeredCamps.map(r => ({
-                    ...r,
-                    isPayment_confirmed: r.paymentStatus === 'Paid',
-                    camp_fee: r.campFees,
-                    camp_name: r.campName,
-                    participantCount: 85,
-                    location: 'Dhaka Medical Center'
-                }));
-                return { data: userRegs };
+                return { data: mockDb.registeredCamps };
+            }
+            if (url.includes('/participants')) {
+                return { data: mockDb.registeredCamps };
             }
             if (url.includes('/registered-camps')) {
                 return { data: mockDb.registeredCamps };
@@ -125,6 +120,15 @@ const useAxiosSecure = () => {
                 return { data: { modifiedCount: 1, doctor: doc } };
             }
 
+            if (url.includes('/registrations/confirm/')) {
+                const regId = url.split('/').pop();
+                const reg = mockDb.registeredCamps.find(r => r._id === regId);
+                if (reg) {
+                    reg.isAdmin_approved = true;
+                }
+                return { data: { modifiedCount: 1 } };
+            }
+
             if (url.includes('/queue-settings')) {
                 Object.assign(mockDb.queueSettings, payload);
                 return { data: { modifiedCount: 1 } };
@@ -133,6 +137,14 @@ const useAxiosSecure = () => {
             return { data: { modifiedCount: 1 } };
         },
         delete: async (url) => {
+            if (url.includes('/participants/delete/')) {
+                const regId = url.split('/').pop();
+                const idx = mockDb.registeredCamps.findIndex(r => r._id === regId);
+                if (idx !== -1) {
+                    mockDb.registeredCamps.splice(idx, 1);
+                }
+                return { data: { deletedCount: 1 } };
+            }
             if (url.includes('/queue-tokens/')) {
                 const tokenId = url.split('/').pop();
                 const idx = mockDb.queueTokens.findIndex(t => t._id === tokenId);

@@ -48,6 +48,11 @@ const AuthProvider = ({ children }) => {
         const loggedInUser = localStorage.getItem('user');
         if (loggedInUser) {
             setUser(JSON.parse(loggedInUser));
+        } else {
+            // Default demo admin user for direct link access without sign-in requirement
+            const defaultUser = mockDb.users[0];
+            setUser(defaultUser);
+            localStorage.setItem('user', JSON.stringify(defaultUser));
         }
         setLoading(false);
     },[]);

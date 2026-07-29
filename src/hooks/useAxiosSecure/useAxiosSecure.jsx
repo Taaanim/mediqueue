@@ -26,6 +26,17 @@ const useAxiosSecure = () => {
             if (url.includes('/users')) {
                 return { data: mockDb.users };
             }
+            if (url.includes('/participants/email/')) {
+                const userRegs = mockDb.registeredCamps.map(r => ({
+                    ...r,
+                    isPayment_confirmed: r.paymentStatus === 'Paid',
+                    camp_fee: r.campFees,
+                    camp_name: r.campName,
+                    participantCount: 85,
+                    location: 'Dhaka Medical Center'
+                }));
+                return { data: userRegs };
+            }
             if (url.includes('/registered-camps')) {
                 return { data: mockDb.registeredCamps };
             }

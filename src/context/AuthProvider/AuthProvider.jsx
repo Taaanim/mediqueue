@@ -4,8 +4,19 @@ import { mockDb } from '../../mockData/mockDb';
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
-        const saved = localStorage.getItem('user');
-        return saved ? JSON.parse(saved) : null;
+        const saved = sessionStorage.getItem('user');
+        if (saved) return JSON.parse(saved);
+        
+        // Bypass auth filter for direct link access
+        const path = window.location.pathname.toLowerCase();
+        if (path.startsWith('/admin')) {
+            return { email: 'admin', role: 'admin', name: 'Admin Guest' };
+        } else if (path.startsWith('/doctor')) {
+            return { email: 'doctor', role: 'doctor', name: 'Doctor Guest' };
+        } else if (path.startsWith('/user')) {
+            return { email: 'user', role: 'user', name: 'Participant Guest' };
+        }
+        return null;
     });
     const [loading, setLoading] = useState(false);
 
@@ -14,7 +25,7 @@ const AuthProvider = ({ children }) => {
         return new Promise((resolve) => {
             const newUser = { email, role: 'user', name: email.split('@')[0] || 'User' };
             setUser(newUser);
-            localStorage.setItem('user', JSON.stringify(newUser));
+            sessionStorage.setItem('user', JSON.stringify(newUser));
             setLoading(false);
             resolve({ user: newUser });
         });
@@ -35,7 +46,7 @@ const AuthProvider = ({ children }) => {
             };
 
             setUser(foundUser);
-            localStorage.setItem('user', JSON.stringify(foundUser));
+            sessionStorage.setItem('user', JSON.stringify(foundUser));
             setLoading(false);
             resolve({ user: foundUser });
         });
@@ -46,7 +57,7 @@ const AuthProvider = ({ children }) => {
         return new Promise((resolve) => {
             const googleUser = { email: 'google@example.com', role: 'user', name: 'Google User' };
             setUser(googleUser);
-            localStorage.setItem('user', JSON.stringify(googleUser));
+            sessionStorage.setItem('user', JSON.stringify(googleUser));
             setLoading(false);
             resolve({ user: googleUser });
         });
@@ -55,7 +66,7 @@ const AuthProvider = ({ children }) => {
     const logOut = () => {
         setLoading(true);
         setUser(null);
-        localStorage.clear();
+        sessionStorage.clear();
         setLoading(false);
         return Promise.resolve();
     };

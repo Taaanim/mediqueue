@@ -24,7 +24,7 @@ const Dashboard = () => {
     });
 
     const handleSignOut = () => {
-        localStorage.clear();
+        sessionStorage.clear();
         if (logOut) logOut();
         toast.success('Sign Out Successful!', {
             position: 'top-right', autoClose: 2000, theme: 'light', transition: Bounce,
@@ -91,7 +91,8 @@ const Dashboard = () => {
     else if (path.startsWith('/doctor')) computedRole = 'doctor';
     else if (path.startsWith('/user')) computedRole = 'user';
 
-    const activeRole = userData?.role?.toLowerCase() || computedRole;
+    // Strictly enforce the view based on the URL so /admin always shows admin layout
+    const activeRole = computedRole;
 
     const renderNav = () => {
       if (isRoleLoading) return <SidebarSkeleton />;

@@ -35,50 +35,50 @@ export const router = createBrowserRouter([
         { path: '/AvailableCamps', Component: AvailableCamps },
         { path: '/HospitalQueue', Component: HospitalQueue },
         { path: '/TrackQueue/:id', Component: QueueTracker },
-        { path: '/CampDetails/:id', element: <PrivateRoute><CampDetails/></PrivateRoute> },
+        { path: '/CampDetails/:id', element: <CampDetails/> },
         { path: '/SignIn', Component: SignIn },
         { path: '/SignUp', Component: SignUp }
     ]
   },
   {
     path: '/admin/dashboard',
-    element: <PrivateRoute><Dashboard/></PrivateRoute>,
+    element: <Dashboard/>,
     children: [
-      { index: true, element: <PrivateRoute><Overview/></PrivateRoute> },
-      { path: 'OrganizerProfile', element: <PrivateRoute><OrganizerProfile/></PrivateRoute> },
-      { path: 'AddACamp', element: <PrivateRoute><AddACamp/></PrivateRoute> },
-      { path: 'ManageCamps', element: <PrivateRoute><ManageCamps/></PrivateRoute> },
-      { path: 'ManageRegisteredCamps', element: <PrivateRoute><ManageRegisteredCamps/></PrivateRoute> },
-      { path: 'UpdateCamp/:id', element: <PrivateRoute><UpdateCamp/></PrivateRoute> },
-      { path: 'ManageQueueSystem', element: <PrivateRoute><ManageQueueSystem/></PrivateRoute> },
-      { path: 'QueueAnalytics', element: <PrivateRoute><QueueAnalytics/></PrivateRoute> },
+      { index: true, element: <Overview/> },
+      { path: 'OrganizerProfile', element: <OrganizerProfile/> },
+      { path: 'AddACamp', element: <AddACamp/> },
+      { path: 'ManageCamps', element: <ManageCamps/> },
+      { path: 'ManageRegisteredCamps', element: <ManageRegisteredCamps/> },
+      { path: 'UpdateCamp/:id', element: <UpdateCamp/> },
+      { path: 'ManageQueueSystem', element: <ManageQueueSystem/> },
+      { path: 'QueueAnalytics', element: <QueueAnalytics/> },
     ]
   },
   {
     path: '/doctor/dashboard',
-    element: <PrivateRoute><Dashboard/></PrivateRoute>,
+    element: <Dashboard/>,
     children: [
-      { index: true, element: <PrivateRoute><DoctorQueue/></PrivateRoute> },
-      { path: 'DoctorQueue', element: <PrivateRoute><DoctorQueue/></PrivateRoute> },
-      { path: 'QueueAnalytics', element: <PrivateRoute><QueueAnalytics/></PrivateRoute> },
-      { path: 'OrganizerProfile', element: <PrivateRoute><OrganizerProfile/></PrivateRoute> },
+      { index: true, element: <DoctorQueue/> },
+      { path: 'DoctorQueue', element: <DoctorQueue/> },
+      { path: 'QueueAnalytics', element: <QueueAnalytics/> },
+      { path: 'OrganizerProfile', element: <OrganizerProfile/> },
     ]
   },
   {
     path: '/user/dashboard',
-    element: <PrivateRoute><Dashboard/></PrivateRoute>,
+    element: <Dashboard/>,
     children: [
-      { index: true, element: <PrivateRoute><Overview/></PrivateRoute> },
-      { path: 'OrganizerProfile', element: <PrivateRoute><OrganizerProfile/></PrivateRoute> },
-      { path: 'RegisteredCamps', element: <PrivateRoute><RegisteredCamps/></PrivateRoute> },
-      { path: 'PaymentHistory', element: <PrivateRoute><PaymentHistory/></PrivateRoute> },
-      { path: 'MyQueueTokens', element: <PrivateRoute><MyQueueTokens/></PrivateRoute> },
-      { path: 'BrowseDoctors', element: <PrivateRoute><HospitalQueue/></PrivateRoute> },
+      { index: true, element: <Overview/> },
+      { path: 'OrganizerProfile', element: <OrganizerProfile/> },
+      { path: 'RegisteredCamps', element: <RegisteredCamps/> },
+      { path: 'PaymentHistory', element: <PaymentHistory/> },
+      { path: 'MyQueueTokens', element: <MyQueueTokens/> },
+      { path: 'BrowseDoctors', element: <HospitalQueue/> },
     ]
   },
   {
     path: '/PayForRegistration',
-    element:<PrivateRoute><PayForRegistration/></PrivateRoute>
+    element:<PayForRegistration/>
   },
   {
     path: '*',

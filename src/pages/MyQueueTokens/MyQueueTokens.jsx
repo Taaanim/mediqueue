@@ -23,20 +23,20 @@ const MyQueueTokens = () => {
   return (
     <div className="space-y-6">
       {/* HEADER */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <span className="bg-[#1e74d2] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
             Patient Portal
           </span>
-          <h1 className="text-3xl font-extrabold poppins text-white mt-2">
+          <h1 className="text-3xl font-extrabold poppins text-slate-800 mt-2">
             My Queue Tokens
           </h1>
-          <p className="text-slate-400 text-sm mt-1">Track your active OPD consultation queue position and history in real-time.</p>
+          <p className="text-slate-600 text-sm mt-1 inter">Track your active OPD consultation queue position and history in real-time.</p>
         </div>
 
         <RouterLink 
-          to="/HospitalQueue" 
-          className="px-5 py-2.5 bg-[#1e74d2] text-white font-bold text-xs rounded-xl shadow-lg hover:bg-blue-700 transition-all flex items-center gap-2"
+          to="/Dashboard/BrowseDoctors" 
+          className="px-5 py-2.5 bg-[#1e74d2] text-white font-bold text-xs rounded-xl shadow-md hover:bg-blue-700 transition-all flex items-center gap-2"
         >
           <Ticket className="w-4 h-4" /> Get New Queue Token
         </RouterLink>
@@ -50,7 +50,7 @@ const MyQueueTokens = () => {
           <h3 className="text-lg font-bold text-slate-800">No Queue Tokens Found</h3>
           <p className="text-slate-500 text-sm mt-1">You haven't generated any OPD queue tokens yet.</p>
           <RouterLink 
-            to="/HospitalQueue" 
+            to="/Dashboard/BrowseDoctors" 
             className="inline-block mt-4 px-5 py-2.5 bg-[#1e74d2] text-white font-bold text-xs rounded-xl shadow"
           >
             Browse Doctors & Get Token

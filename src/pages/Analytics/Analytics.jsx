@@ -90,7 +90,7 @@ const Analytics = () => {
 
                 {/* DIRECT OPD DOCTOR ACCESS BUTTON */}
                 <Link
-                    to="/HospitalQueue"
+                    to="/Dashboard/BrowseDoctors"
                     className="px-6 py-3.5 bg-[#1e74d2] text-white font-bold text-sm rounded-2xl shadow-md hover:bg-[#185dab] transition-all flex items-center gap-2 cursor-pointer shrink-0"
                 >
                     <Stethoscope className="w-5 h-5" />
@@ -196,7 +196,7 @@ const Analytics = () => {
                     </div>
 
                     <Link
-                        to="/HospitalQueue"
+                        to="/Dashboard/BrowseDoctors"
                         className="mt-6 w-full text-center py-3 bg-[#1e74d2] text-white font-bold text-xs rounded-xl shadow hover:bg-[#185dab] transition-all block"
                     >
                         + Book New Doctor Token

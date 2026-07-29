@@ -62,7 +62,7 @@ const Dashboard = () => {
     const userSidebarLinks = (
         <>
             <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/Dashboard/MyQueueTokens"><BsCheck2Square size={20} />My OPD Queue Tokens</Link>
-            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/HospitalQueue"><MdOutlineAddLocation size={20} />Browse OPD Doctors</Link>
+            <Link className='flex items-center gap-2 mb-3.5 w-fit hover:text-[#1e74d2] font-medium' to="/Dashboard/BrowseDoctors"><MdOutlineAddLocation size={20} />Browse OPD Doctors</Link>
             
             <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Participant Account

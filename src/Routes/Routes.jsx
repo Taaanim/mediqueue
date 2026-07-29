@@ -113,6 +113,10 @@ export const router = createBrowserRouter([
         path: '/Dashboard/MyQueueTokens',
         element: <PrivateRoute><MyQueueTokens/></PrivateRoute>
       },
+      {
+        path: '/Dashboard/BrowseDoctors',
+        element: <PrivateRoute><HospitalQueue/></PrivateRoute>
+      },
     ]
   },
   {

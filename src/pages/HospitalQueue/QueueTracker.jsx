@@ -129,7 +129,7 @@ const QueueTracker = () => {
 
                 <div className="text-left sm:text-right">
                   <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
-                    activeToken.status === 'In Consultation' ? 'bg-emerald-100 text-emerald-700 border border-emerald-300' :
+                    activeToken.status === 'In Consultation' ? 'bg-blue-100 text-[#1e74d2] border border-blue-300' :
                     activeToken.status === 'Calling' ? 'bg-amber-100 text-amber-700 border border-amber-300 animate-pulse' :
                     activeToken.status === 'Completed' ? 'bg-blue-100 text-blue-700' :
                     activeToken.status === 'Cancelled' ? 'bg-rose-100 text-rose-700' :
@@ -170,7 +170,7 @@ const QueueTracker = () => {
                 </div>
 
                 <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
-                  <div className="bg-emerald-50 p-3 rounded-xl text-emerald-600">
+                  <div className="bg-blue-50 p-3 rounded-xl text-[#1e74d2]">
                     <CheckCircle2 className="w-7 h-7" />
                   </div>
                   <div>

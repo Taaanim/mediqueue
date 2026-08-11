@@ -117,7 +117,7 @@ const Dashboard = () => {
                     <div className="bg-[#1e74d2] p-2 rounded-lg">
                         <img className='w-12' src="https://res.cloudinary.com/dv6p7mprd/image/upload/v1752010021/ChatGPT_Image_Jul_8__2025__03_05_06_AM-removebg-preview_nbdpj2.png" alt="" />
                     </div>
-                    <h1 className="text-2xl font-bold text-gray-600 poppins">MediCamp</h1>
+                    <h1 className="text-2xl font-bold text-gray-600 poppins">MediQueue</h1>
                 </Link>
 
                 <nav className="flex-1 flex flex-col gap-1 text-gray-600 overflow-y-auto pr-1 scrollbar-thin">
@@ -148,7 +148,7 @@ const Dashboard = () => {
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block h-6 w-6 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                                 </label>
                             </div>
-                            <div className="flex-1 px-2 mx-2 font-bold">MediCamp Dashboard</div>
+                            <div className="flex-1 px-2 mx-2 font-bold">MediQueue Dashboard</div>
                         </div>
                         <div className="p-4 sm:p-6 min-h-screen">
                            <Outlet />
@@ -157,7 +157,7 @@ const Dashboard = () => {
                     <div className="drawer-side z-50">
                         <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
                         <div className="menu p-4 w-72 min-h-full bg-gradient-to-tl from-[#e5f2fa] to-[#a7d4f9] flex flex-col">
-                            <h1 className="text-xl font-bold text-slate-800 p-4 mb-4 poppins">MediCamp</h1>
+                            <h1 className="text-xl font-bold text-slate-800 p-4 mb-4 poppins">MediQueue</h1>
                             <nav className="flex-1 flex flex-col gap-2 text-gray-600">
                                 {renderNav()}
                             </nav>

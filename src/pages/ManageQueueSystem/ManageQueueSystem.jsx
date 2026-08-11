@@ -278,7 +278,7 @@ const ManageQueueSystem = () => {
               <label className="block text-xs font-bold text-slate-700 mb-1">Hospital Name</label>
               <input
                 type="text"
-                defaultValue={settings.hospitalName || 'MediCamp Central Hospital'}
+                defaultValue={settings.hospitalName || 'MediQueue Central Hospital'}
                 onBlur={(e) => updateSettingsMutation.mutate({ hospitalName: e.target.value })}
                 className="w-full px-4 py-2 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#1e74d2] outline-none"
               />
@@ -325,7 +325,7 @@ const ManageQueueSystem = () => {
         <div className={`bg-white p-8 rounded-3xl shadow-md border border-slate-200 space-y-6 ${activeTab !== 'report' ? 'hidden print:block' : 'block'}`}>
           <div className="border-b border-slate-200 pb-4 flex justify-between items-center">
             <div>
-              <h2 className="text-2xl font-bold text-slate-800 poppins">MediCamp OPD Queue Statistics Report</h2>
+              <h2 className="text-2xl font-bold text-slate-800 poppins">MediQueue OPD Queue Statistics Report</h2>
               <p className="text-xs text-slate-500 mt-1">Daily Summary & Patient Flow Statistics • Date: {new Date().toLocaleDateString()}</p>
             </div>
             <Printer className="w-6 h-6 text-slate-400 print:hidden cursor-pointer" onClick={handlePrintPDFReport} />

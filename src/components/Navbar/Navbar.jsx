@@ -47,7 +47,7 @@ const Navbar = () => {
                 <img 
                 className=" w-18" 
                 src="https://res.cloudinary.com/dv6p7mprd/image/upload/v1751923329/logo02_h3at9o.png" alt="" />
-                <a className=" text-3xl font-bold text-[#1e74d2] poppins ">MediCamp</a>            
+                <a className=" text-3xl font-bold text-[#1e74d2] poppins ">MediQueue</a>            
             </div>        
           </div>
         </div>

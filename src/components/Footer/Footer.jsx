@@ -15,7 +15,7 @@ const Footer = () => {
                         className='w-12'
                         src="https://res.cloudinary.com/dv6p7mprd/image/upload/v1752010021/ChatGPT_Image_Jul_8__2025__03_05_06_AM-removebg-preview_nbdpj2.png" alt="" />
                         {/* <FaHandHoldingMedical className='text-white text-2xl' /> */}
-                        <span className="mt-1 font-bold text-md poppins">MediCamp</span>
+                        <span className="mt-1 font-bold text-md poppins">MediQueue</span>
                     </div>
                     </div>
                 </div>
@@ -23,7 +23,7 @@ const Footer = () => {
                 <div className="w-11/12 mx-auto px-8 pb-12 grid gap-12 text-white md:grid-cols-2 lg:grid-cols-4">
                     
                     <div className="md:col-span-2 lg:col-span-1">
-                    <h3 className="text-xl font-bold text-slate-800 poppins">About MediCamp</h3>
+                    <h3 className="text-xl font-bold text-slate-800 poppins">About MediQueue</h3>
                     <p className="mt-4 text-slate-700 leading-relaxed">
                         A non-profit organization dedicated to providing free, high-quality healthcare to underserved communities in Bagerhat and beyond through mobile medical camps.
                     </p>
@@ -69,7 +69,7 @@ const Footer = () => {
 
                 <div className="bg-[#94c8f7] py-4">
                     <div className="max-w-7xl mx-auto px-8 flex flex-col sm:flex-row justify-between items-center text-sm text-slate-800">
-                    <p>&copy; 2025 MediCamp. All Rights Reserved.</p>
+                    <p>&copy; 2025 MediQueue. All Rights Reserved.</p>
                     <div className="mt-2 sm:mt-0 flex space-x-4">
                         <a href="#" className="hover:underline">Privacy Policy</a>
                         <a href="#" className="hover:underline">Terms of Service</a>

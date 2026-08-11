@@ -181,7 +181,7 @@ export const mockDb = {
     avgConsultationTimeMinutes: 15,
     autoCancelInactiveMinutes: 30,
     enableEmergencyPriority: true,
-    hospitalName: 'MediCamp Central Hospital',
+    hospitalName: 'MediQueue Central Hospital',
     operatingHours: '08:00 AM - 08:00 PM'
   },
   camps: [

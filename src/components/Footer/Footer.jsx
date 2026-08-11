@@ -54,13 +54,22 @@ const Footer = () => {
                         </li>
                     </ul>
                     </div>
-
                     <div>
-                    <h3 className="text-xl font-bold text-slate-800 poppins">Get Involved</h3>
-                    <p className="mt-4 text-slate-700">Your support helps us reach more people in need.</p>
-                    <a href="#" className="inline-block mt-4 px-6 py-3 bg-[#1e74d2] text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-colors">
-                        Donate Now
-                    </a>
+                    <h3 className="text-xl font-bold text-slate-800 poppins">Opening Hours</h3>
+                    <ul className="mt-4 space-y-2 text-slate-700 font-medium text-sm">
+                        <li className="flex justify-between">
+                            <span>OPD Services:</span>
+                            <span>9 AM - 5 PM</span>
+                        </li>
+                        <li className="flex justify-between">
+                            <span>Pharmacy:</span>
+                            <span>8 AM - 10 PM</span>
+                        </li>
+                        <li className="flex justify-between mt-2 pt-2 border-t border-slate-700/20">
+                            <span>Emergency:</span>
+                            <span className="font-bold text-[#1e74d2]">24/7 Open</span>
+                        </li>
+                    </ul>
                     </div>
 
                 </div>

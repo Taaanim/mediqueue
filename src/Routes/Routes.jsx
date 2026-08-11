@@ -25,6 +25,9 @@ import DoctorQueue from "../pages/DoctorQueue/DoctorQueue";
 import ManageQueueSystem from "../pages/ManageQueueSystem/ManageQueueSystem";
 import QueueAnalytics from "../pages/QueueAnalytics/QueueAnalytics";
 import MyQueueTokens from "../pages/MyQueueTokens/MyQueueTokens";
+import Doctors from "../pages/Doctors/Doctors";
+import AboutUs from "../pages/AboutUs/AboutUs";
+import Contact from "../pages/Contact/Contact";
 
 export const router = createBrowserRouter([
   {
@@ -32,10 +35,13 @@ export const router = createBrowserRouter([
     Component: Root,
     children:[
         { index: true, Component: Home },
-        { path: '/AvailableCamps', Component: AvailableCamps },
+        // { path: '/AvailableCamps', Component: AvailableCamps },
         { path: '/HospitalQueue', Component: HospitalQueue },
+        { path: '/Doctors', Component: Doctors },
+        { path: '/AboutUs', Component: AboutUs },
+        { path: '/Contact', Component: Contact },
         { path: '/TrackQueue/:id', Component: QueueTracker },
-        { path: '/CampDetails/:id', element: <CampDetails/> },
+        // { path: '/CampDetails/:id', element: <CampDetails/> },
         { path: '/SignIn', Component: SignIn },
         { path: '/SignUp', Component: SignUp }
     ]
@@ -46,10 +52,10 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Overview/> },
       { path: 'OrganizerProfile', element: <OrganizerProfile/> },
-      { path: 'AddACamp', element: <AddACamp/> },
-      { path: 'ManageCamps', element: <ManageCamps/> },
-      { path: 'ManageRegisteredCamps', element: <ManageRegisteredCamps/> },
-      { path: 'UpdateCamp/:id', element: <UpdateCamp/> },
+      // { path: 'AddACamp', element: <AddACamp/> },
+      // { path: 'ManageCamps', element: <ManageCamps/> },
+      // { path: 'ManageRegisteredCamps', element: <ManageRegisteredCamps/> },
+      // { path: 'UpdateCamp/:id', element: <UpdateCamp/> },
       { path: 'ManageQueueSystem', element: <ManageQueueSystem/> },
       { path: 'QueueAnalytics', element: <QueueAnalytics/> },
     ]
@@ -70,16 +76,16 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Overview/> },
       { path: 'OrganizerProfile', element: <OrganizerProfile/> },
-      { path: 'RegisteredCamps', element: <RegisteredCamps/> },
-      { path: 'PaymentHistory', element: <PaymentHistory/> },
+      // { path: 'RegisteredCamps', element: <RegisteredCamps/> },
+      // { path: 'PaymentHistory', element: <PaymentHistory/> },
       { path: 'MyQueueTokens', element: <MyQueueTokens/> },
       { path: 'BrowseDoctors', element: <HospitalQueue/> },
     ]
   },
-  {
-    path: '/PayForRegistration',
-    element:<PayForRegistration/>
-  },
+  // {
+  //   path: '/PayForRegistration',
+  //   element:<PayForRegistration/>
+  // },
   {
     path: '*',
     Component: PageNotFound

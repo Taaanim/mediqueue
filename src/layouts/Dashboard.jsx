@@ -50,12 +50,12 @@ const Dashboard = () => {
             <NavLink className={navLinkClass} to="/admin/dashboard/ManageQueueSystem"><MdOutlineSettings size={20} />Queue Management</NavLink>
             <NavLink className={navLinkClass} to="/admin/dashboard/QueueAnalytics"><BsCheck2Square size={20} />Queue Analytics</NavLink>
             
-            <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
+            {/* <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
               Camp Management
             </div>
             <NavLink className={navLinkClass} to="/admin/dashboard/AddACamp"><MdOutlineAddLocation size={20} />Add a Camp</NavLink>
             <NavLink className={navLinkClass} to="/admin/dashboard/ManageCamps"><MdOutlineSettings size={20} />Manage Camps</NavLink>
-            <NavLink className={navLinkClass} to="/admin/dashboard/ManageRegisteredCamps"><BsCheck2Square size={20} />Manage Registrations</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/ManageRegisteredCamps"><BsCheck2Square size={20} />Manage Registrations</NavLink> */}
         </>
     );
 
@@ -77,8 +77,8 @@ const Dashboard = () => {
             </div>
             <NavLink end className={navLinkClass} to="/user/dashboard"><MdOutlineDashboard size={20} /> Analytics</NavLink>
             <NavLink className={navLinkClass} to="/user/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Participant Profile</NavLink>
-            <NavLink className={navLinkClass} to="/user/dashboard/RegisteredCamps"><MdOutlineAddLocation size={20} />Registered Camps</NavLink>
-            <NavLink className={navLinkClass} to="/user/dashboard/PaymentHistory"><MdOutlineSettings size={20} />Payment History</NavLink>
+            {/* <NavLink className={navLinkClass} to="/user/dashboard/RegisteredCamps"><MdOutlineAddLocation size={20} />Registered Camps</NavLink>
+            <NavLink className={navLinkClass} to="/user/dashboard/PaymentHistory"><MdOutlineSettings size={20} />Payment History</NavLink> */}
         </>
     );
 

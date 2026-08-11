@@ -382,6 +382,40 @@ export const mockDb = {
       date: new Date().toISOString(),
       status: 'success'
     }
+  ],
+  feedbacks: [
+    {
+      _id: 'fb_1',
+      participantName: 'Fatima Akter',
+      participantEmail: 'fatima@example.com',
+      rating: 5,
+      comment: 'The OPD live queue system is amazing! I booked my token online and didn’t have to wait in line at Dr. Hasan Mahmud’s chamber. Highly recommended!',
+      serviceName: 'Ophthalmology OPD'
+    },
+    {
+      _id: 'fb_2',
+      participantName: 'Rahim Sheikh',
+      participantEmail: 'rahim@example.com',
+      rating: 5,
+      comment: 'Dr. A.K. Azad was incredibly thorough during my cardiac checkup. The estimated waiting time feature on MediQueue was spot on.',
+      serviceName: 'Cardiology OPD'
+    },
+    {
+      _id: 'fb_3',
+      participantName: 'Nusrat Jahan',
+      participantEmail: 'nusrat@yahoo.com',
+      rating: 5,
+      comment: 'The pediatric OPD service for my daughter was smooth and stress-free. Very clean hospital facilities and caring doctors.',
+      serviceName: 'Pediatrics OPD'
+    },
+    {
+      _id: 'fb_4',
+      participantName: 'Kamal Hossain',
+      participantEmail: 'kamal@gmail.com',
+      rating: 4,
+      comment: 'Great digital OPD management system. Getting a token took less than 30 seconds and receptionist staff were very helpful.',
+      serviceName: 'General OPD'
+    }
   ]
 };
 

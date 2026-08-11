@@ -75,7 +75,7 @@ const Banner = () => {
                   <p className='text-xs sm:text-sm'>Our team of experienced doctors and healthcare professionals are committed to providing quality care and personalized attention to our patients.</p>
                 </div>
                 <div className='pt-4 sm:pt-6'>
-                  <Link to='/AvailableCamps' className='px-5 py-3 bg-[#1e74d2] text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors'>View Camps</Link>
+                  <Link to='/HospitalQueue' className='px-5 py-3 bg-[#1e74d2] text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors'>View OPD Queue</Link>
                 </div>
               </div>
 
@@ -124,7 +124,7 @@ const Banner = () => {
                   Our dedicated volunteers provided dental, eye, and primary care services to underserved communities — all in one day.
                 </p>
                 <div className='pt-4 sm:pt-6'>
-                  <Link to='/AvailableCamps' className='px-5 py-3 bg-[#1e74d2] text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors'>View Camps</Link>
+                  <Link to='/HospitalQueue' className='px-5 py-3 bg-[#1e74d2] text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors'>View OPD Queue</Link>
                 </div>
               </div>
 
@@ -177,7 +177,7 @@ const Banner = () => {
                   </ul>
                 </div>
                 <div className='pt-4 sm:pt-6'>
-                  <Link to='/AvailableCamps' className='px-5 py-3 bg-[#1e74d2] text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors'>View Camps</Link>
+                  <Link to='/HospitalQueue' className='px-5 py-3 bg-[#1e74d2] text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors'>View OPD Queue</Link>
                 </div>
               </div>
 

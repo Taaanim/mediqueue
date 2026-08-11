@@ -25,17 +25,18 @@ const Footer = () => {
                     <div className="md:col-span-2 lg:col-span-1">
                     <h3 className="text-xl font-bold text-slate-800 poppins">About MediQueue</h3>
                     <p className="mt-4 text-slate-700 leading-relaxed">
-                        A non-profit organization dedicated to providing free, high-quality healthcare to underserved communities in Bagerhat and beyond through mobile medical camps.
+                        A modern healthcare institution providing smart OPD queue tracking, specialist doctor consultations, and transparent patient management.
                     </p>
                     </div>
 
                     <div>
                     <h3 className="text-xl font-bold text-slate-800 poppins">Quick Links</h3>
-                    <ul className="mt-4 space-y-2 text-slate-700">
-                        {/* <li><a href="#" className="hover:text-[#1e74d2] transition-colors">About Us</a></li> */}
-                        <li><Link to='/AvailableCamps' className="hover:text-[#1e74d2] transition-colors">Our Camps</Link></li>
-                        <li><a href="#feedbacks" className="hover:text-[#1e74d2] transition-colors">Feedback</a></li>
-                        {/* <li><a href="#" className="hover:text-[#1e74d2] transition-colors">Contact</a></li> */}
+                    <ul className="mt-4 space-y-2 text-slate-700 font-medium">
+                        <li><Link to='/' className="hover:text-[#1e74d2] transition-colors">Home</Link></li>
+                        <li><Link to='/HospitalQueue' className="hover:text-[#1e74d2] transition-colors">Hospital Queue</Link></li>
+                        <li><Link to='/Doctors' className="hover:text-[#1e74d2] transition-colors">Our Doctors</Link></li>
+                        <li><Link to='/AboutUs' className="hover:text-[#1e74d2] transition-colors">About Us</Link></li>
+                        <li><Link to='/Contact' className="hover:text-[#1e74d2] transition-colors">Contact</Link></li>
                     </ul>
                     </div>
 
@@ -43,16 +44,13 @@ const Footer = () => {
                     <h3 className="text-xl font-bold text-slate-800 poppins">Contact Us</h3>
                     <ul className="mt-4 space-y-3 text-slate-700">
                         <li className="flex items-start">
-                        
-                        <span>Bagerhat Sadar, Khulna Division, Bangladesh</span>
+                        <span>122 Healthcare Blvd, Green Road, Dhaka</span>
                         </li>
                         <li className="flex items-center">
-                        
-                        <a href="mailto:info@prohealth.org" className="hover:text-[#1e74d2]">info@medicamp.org</a>
+                        <a href="mailto:info@mediqueue-hospital.org" className="hover:text-[#1e74d2]">info@mediqueue-hospital.org</a>
                         </li>
                         <li className="flex items-center">
-                        
-                        <a href="tel:+8801234567890" className="hover:text-[#1e74d2]">+880 123 456 7890</a>
+                        <a href="tel:+8809611999000" className="hover:text-[#1e74d2]">+880 9611-999000</a>
                         </li>
                     </ul>
                     </div>

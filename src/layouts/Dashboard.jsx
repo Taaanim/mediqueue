@@ -45,24 +45,33 @@ const Dashboard = () => {
             <NavLink className={navLinkClass} to="/admin/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Organizer Profile</NavLink>
             
             <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
-              Smart Hospital OPD
+              DOCTOR AND STAFF
             </div>
-            <NavLink className={navLinkClass} to="/admin/dashboard/ManageQueueSystem"><MdOutlineSettings size={20} />Queue Management</NavLink>
-            <NavLink className={navLinkClass} to="/admin/dashboard/QueueAnalytics"><BsCheck2Square size={20} />Queue Analytics</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/DoctorAndStaff"><MdOutlinePerson size={20} />Doctor and Staff</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/Specialties"><BsCheck2Square size={20} />Specialties</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/TokenConfig"><MdOutlineSettings size={20} />Token Generation Config</NavLink>
+
+            <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
+              QUEUE MANAGEMENT
+            </div>
+            <NavLink className={navLinkClass} to="/admin/dashboard/TokenManagement"><MdOutlineAddLocation size={20} />Token Management</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/QueueStats"><BsCheck2Square size={20} />Patient Statistics Report</NavLink>
             
+            {/* 
             <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
               Camp Management
             </div>
             <NavLink className={navLinkClass} to="/admin/dashboard/AddACamp"><MdOutlineAddLocation size={20} />Add a Camp</NavLink>
             <NavLink className={navLinkClass} to="/admin/dashboard/ManageCamps"><MdOutlineSettings size={20} />Manage Camps</NavLink>
-            <NavLink className={navLinkClass} to="/admin/dashboard/ManageRegisteredCamps"><BsCheck2Square size={20} />Manage Registrations</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/ManageRegisteredCamps"><BsCheck2Square size={20} />Manage Registrations</NavLink> 
+            */}
         </>
     );
 
     const doctorSidebarLinks = (
         <>
             <NavLink end className={navLinkClass} to="/doctor/dashboard"><MdOutlineDashboard size={20} />Live Patient Queue</NavLink>
-            <NavLink className={navLinkClass} to="/doctor/dashboard/QueueAnalytics"><BsCheck2Square size={20} />Queue Analytics</NavLink>
+            <NavLink className={navLinkClass} to="/doctor/dashboard/QueueStats"><BsCheck2Square size={20} />Queue Analytics</NavLink>
             <NavLink className={navLinkClass} to="/doctor/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Doctor Profile</NavLink>
         </>
     );

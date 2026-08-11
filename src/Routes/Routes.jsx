@@ -22,8 +22,11 @@ import PageNotFound from "../pages/PageNotFound/PageNotFound";
 import HospitalQueue from "../pages/HospitalQueue/HospitalQueue";
 import QueueTracker from "../pages/HospitalQueue/QueueTracker";
 import DoctorQueue from "../pages/DoctorQueue/DoctorQueue";
-import ManageQueueSystem from "../pages/ManageQueueSystem/ManageQueueSystem";
-import QueueAnalytics from "../pages/QueueAnalytics/QueueAnalytics";
+import DoctorAndStaff from "../pages/DoctorAndStaff/DoctorAndStaff";
+import Specialties from "../pages/Specialties/Specialties";
+import TokenConfig from "../pages/TokenConfig/TokenConfig";
+import TokenManagement from "../pages/TokenManagement/TokenManagement";
+import QueueStats from "../pages/QueueStats/QueueStats";
 import MyQueueTokens from "../pages/MyQueueTokens/MyQueueTokens";
 
 export const router = createBrowserRouter([
@@ -50,8 +53,11 @@ export const router = createBrowserRouter([
       { path: 'ManageCamps', element: <ManageCamps/> },
       { path: 'ManageRegisteredCamps', element: <ManageRegisteredCamps/> },
       { path: 'UpdateCamp/:id', element: <UpdateCamp/> },
-      { path: 'ManageQueueSystem', element: <ManageQueueSystem/> },
-      { path: 'QueueAnalytics', element: <QueueAnalytics/> },
+      { path: 'DoctorAndStaff', element: <DoctorAndStaff/> },
+      { path: 'Specialties', element: <Specialties/> },
+      { path: 'TokenConfig', element: <TokenConfig/> },
+      { path: 'TokenManagement', element: <TokenManagement/> },
+      { path: 'QueueStats', element: <QueueStats/> },
     ]
   },
   {
@@ -60,7 +66,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <DoctorQueue/> },
       { path: 'DoctorQueue', element: <DoctorQueue/> },
-      { path: 'QueueAnalytics', element: <QueueAnalytics/> },
+      { path: 'QueueStats', element: <QueueStats/> },
       { path: 'OrganizerProfile', element: <OrganizerProfile/> },
     ]
   },

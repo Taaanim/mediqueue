@@ -25,6 +25,7 @@ import DoctorQueue from "../pages/DoctorQueue/DoctorQueue";
 import ManageQueueSystem from "../pages/ManageQueueSystem/ManageQueueSystem";
 import QueueAnalytics from "../pages/QueueAnalytics/QueueAnalytics";
 import MyQueueTokens from "../pages/MyQueueTokens/MyQueueTokens";
+import ConsultationHistory from "../pages/ConsultationHistory/ConsultationHistory";
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +75,7 @@ export const router = createBrowserRouter([
       { path: 'PaymentHistory', element: <PaymentHistory/> },
       { path: 'MyQueueTokens', element: <MyQueueTokens/> },
       { path: 'BrowseDoctors', element: <HospitalQueue/> },
+      { path: 'ConsultationHistory', element: <ConsultationHistory/> },
     ]
   },
   {

@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import useAuth from '../../hooks/useAuth/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure/useAxiosSecure';
 import Analytics from '../Analytics/Analytics';
+import { mockDb } from '../../mockData/mockDb';
 
 // NOTE: This hardcoded data should be fetched from an API in a real application.
 const recentActivity = [
@@ -25,16 +26,14 @@ const Overview = () => {
     queryKey: ['userRole', user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/users/${user.email}`);
-      return res.data[0]; 
+      return mockDb.users.find(u => u.email === user?.email) || { role: 'user' };
     }
   });
 
   const { data: allCamps = [], isLoading: campsLoading, isError: campsError } = useQuery({
     queryKey: ['allCamps'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/camps');
-      return res.data;
+      return mockDb.camps;
     }
   });
 

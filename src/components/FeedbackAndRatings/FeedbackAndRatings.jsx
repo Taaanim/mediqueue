@@ -69,7 +69,7 @@ const FeedbackAndRatings = () => {
                         Voices from Our Community
                     </h2>
                     <p className="mt-4 text-lg max-w-2xl mx-auto text-slate-600">
-                        See what people are saying about our recent medical camps and the impact we've made together.
+                        See what patients are saying about our OPD doctor consultations and hospital services.
                     </p>
                 </div>
 
@@ -130,7 +130,7 @@ const FeedbackAndRatings = () => {
                                 <footer className="mt-6">
                                     <StarRating rating={selectedFeedback.rating} />
                                     <p className="font-bold text-slate-800 mt-4">- {selectedFeedback.participantName}</p>
-                                    <p className="text-sm text-slate-500">Feedback for "{selectedFeedback.campName}"</p>
+                                    <p className="text-sm text-slate-500 font-medium">Feedback for {selectedFeedback.serviceName || selectedFeedback.campName || "OPD Consultation"}</p>
                                 </footer>
                             </div>
                         )}

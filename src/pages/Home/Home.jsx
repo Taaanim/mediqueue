@@ -1,9 +1,9 @@
 import React from 'react';
 import Banner from '../../components/Banner/Banner';
-import PopularCamps from '../../components/PopularCamps/PopularCamps';
+import Departments from '../../components/Departments/Departments';
+import HomeDoctors from '../../components/HomeDoctors/HomeDoctors';
 import FeedbackAndRatings from '../../components/FeedbackAndRatings/FeedbackAndRatings';
 import ApproachToCare from '../../components/ApproachToCare/ApproachToCare';
-import Departments from '../../components/Departments/Departments';
 
 const Home = () => {
     return (
@@ -15,7 +15,7 @@ const Home = () => {
                 <Departments/>
             </div>
             <div>
-                <PopularCamps/>
+                <HomeDoctors/>
             </div>
             <div>
                 <FeedbackAndRatings/>

@@ -8,6 +8,7 @@ import {
 import { toast, Bounce } from 'react-toastify';
 import useAxiosSecure from '../../hooks/useAxiosSecure/useAxiosSecure';
 import useAuth from '../../hooks/useAuth/useAuth';
+import SharedCard from "../../components/SharedCard/SharedCard";
 import { mockDb } from '../../mockData/mockDb';
 
 // SVG Icons matching AvailableCamps
@@ -138,6 +139,12 @@ const HospitalQueue = () => {
     return docTokens[0] || null;
   };
 
+  // Helper to get next waiting token
+  const getDoctorNextToken = (doctorId) => {
+    const waitingTokens = tokens.filter(t => t.doctorId === doctorId && t.status === 'Waiting');
+    return waitingTokens[0] || null;
+  };
+
   // Helper to count waiting tokens
   const getDoctorWaitingCount = (doctorId) => {
     return tokens.filter(t => t.doctorId === doctorId && t.status === 'Waiting').length;
@@ -193,12 +200,13 @@ const HospitalQueue = () => {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-thin scrollbar-thumb-slate-300 scroll-smooth">
             {doctors.map(doc => {
               const activeTok = getDoctorActiveToken(doc._id);
+              const nextTok = getDoctorNextToken(doc._id);
               return (
-                <div key={doc._id} className="bg-slate-50 rounded-xl p-3.5 border border-slate-200">
-                  <div className="flex justify-between items-start mb-1.5">
+                <div key={doc._id} className="w-[85%] sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] shrink-0 bg-slate-50 rounded-xl p-3.5 border border-slate-200 shadow-xs">
+                  <div className="flex justify-between items-start mb-2">
                     <div>
                       <p className="font-bold text-slate-800 text-sm truncate">{doc.name}</p>
                       <p className="text-xs text-slate-500">{doc.specialty} • {doc.roomNo}</p>
@@ -208,16 +216,30 @@ const HospitalQueue = () => {
                     </span>
                   </div>
 
-                  <div className="bg-white p-2.5 rounded-lg text-center mt-2 border border-slate-200">
-                    <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Now Serving</p>
-                    {activeTok ? (
-                      <div className="mt-1">
-                        <span className="text-xl font-black text-[#1e74d2] font-mono">{activeTok.tokenNumber}</span>
-                        <p className="text-xs font-medium text-slate-700 truncate">{activeTok.patientName}</p>
-                      </div>
-                    ) : (
-                      <span className="text-xs font-medium text-slate-400 block py-1">No Active Token</span>
-                    )}
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    <div className="bg-white p-2 rounded-lg text-center border border-slate-200">
+                      <p className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Now Serving</p>
+                      {activeTok ? (
+                        <div className="mt-0.5">
+                          <span className="text-base font-black text-[#1e74d2] font-mono">{activeTok.tokenNumber}</span>
+                          <p className="text-[10px] font-medium text-slate-700 truncate">{activeTok.patientName}</p>
+                        </div>
+                      ) : (
+                        <span className="text-xs font-medium text-slate-400 block py-1">None</span>
+                      )}
+                    </div>
+
+                    <div className="bg-blue-50/70 p-2 rounded-lg text-center border border-blue-100">
+                      <p className="text-[9px] uppercase font-bold tracking-wider text-[#1e74d2]">Next In Line</p>
+                      {nextTok ? (
+                        <div className="mt-0.5">
+                          <span className="text-base font-bold text-slate-800 font-mono">{nextTok.tokenNumber}</span>
+                          <p className="text-[10px] font-medium text-slate-600 truncate">{nextTok.patientName}</p>
+                        </div>
+                      ) : (
+                        <span className="text-xs font-medium text-slate-400 block py-1">None</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
@@ -292,59 +314,21 @@ const HospitalQueue = () => {
               const estWaitMinutes = waitingCount * doc.avgConsultTimeMinutes;
 
               return (
-                <div
+                <SharedCard
                   key={doc._id}
-                  className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1.5 group border border-slate-200 flex flex-col"
-                >
-                  <div className="relative">
-                    <img
-                      src={doc.imageUrl}
-                      alt={doc.name}
-                      className="w-full h-56 object-cover"
-                    />
-                    <div className={`absolute top-4 right-4 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg ${doc.isAvailable ? 'bg-[#1e74d2]' : 'bg-slate-600'}`}>
-                      {doc.isAvailable ? 'Available' : 'On Break'}
-                    </div>
-                  </div>
-
-                  <div className="p-6 flex-grow">
-                    <h3
-                      className="text-xl poppins font-bold text-slate-800 mb-3 truncate"
-                      title={doc.name}
-                    >
-                      {doc.name}
-                    </h3>
-
-                    <div className="space-y-3 text-slate-600 inter">
-                      <div className="flex items-center">
-                        <Icons.Calendar />
-                        <span className="font-semibold text-[#1e74d2]">{doc.specialty}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Icons.Location />
-                        <span>{doc.roomNo} • {doc.phone}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="px-6 pb-6 pt-4 border-t border-slate-100 mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div className="flex flex-col text-sm text-slate-500 font-medium">
-                      <p>Queue Status</p>                    
-                      <span className="flex items-center gap-1 font-bold text-slate-700">
-                        <Icons.Participants />{waitingCount} Waiting ({estWaitMinutes} mins)
-                      </span>
-                    </div>
-
-                    <button
-                      onClick={() => handleOpenTokenModal(doc)}
-                      disabled={!doc.isAvailable}
-                      className="bg-[#1e74d2] text-white font-semibold px-5 py-2.5 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#185dab] focus:outline-none focus:ring-2 focus:ring-[#1e74d2] focus:ring-offset-2 flex items-center gap-2 group-hover:pl-4 group-hover:pr-6 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap w-full sm:w-auto justify-center"
-                    >
-                      Get Token
-                      <Icons.ArrowRight />
-                    </button>
-                  </div>
-                </div>
+                  image={doc.imageUrl}
+                  badgeText={doc.isAvailable ? 'Available' : 'On Break'}
+                  badgeColorClass={doc.isAvailable ? 'bg-[#1e74d2]' : 'bg-slate-600'}
+                  title={doc.name}
+                  subtitle1={doc.specialty}
+                  subtitle1Highlight={true}
+                  subtitle2={`${doc.roomNo} • ${doc.phone}`}
+                  statLabel="Queue Status"
+                  statValue={`${waitingCount} Waiting (${estWaitMinutes} mins)`}
+                  buttonText="Get Token"
+                  onAction={() => handleOpenTokenModal(doc)}
+                  actionDisabled={!doc.isAvailable}
+                />
               );
             })}
           </div>

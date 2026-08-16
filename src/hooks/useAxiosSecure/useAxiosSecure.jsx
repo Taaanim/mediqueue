@@ -38,6 +38,9 @@ const useAxiosSecure = () => {
             if (url.includes('/payments')) {
                 return { data: mockDb.payments };
             }
+            if (url.includes('/feedbacks')) {
+                return { data: mockDb.feedbacks };
+            }
             return { data: [] };
         },
         post: async (url, payload) => {

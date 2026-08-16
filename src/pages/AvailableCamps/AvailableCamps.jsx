@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure/useAxiosSecure";
+import SharedCard from "../../components/SharedCard/SharedCard";
 
 const Icons = {
   Search: () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" /></svg>,
@@ -119,50 +120,18 @@ const AvailableCamps = () => {
         {filteredAndSortedCamps.length > 0 ? (
           <div className={`grid ${layout} gap-8`}>
             {filteredAndSortedCamps.map((camp) => (
-              <div
+              <SharedCard
                 key={camp._id}
-                className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1.5 group border border-slate-200 flex flex-col"
-              >
-                <div className="relative">
-                  <img
-                    src={camp.imageUrl}
-                    alt={camp.name}
-                    className="w-full h-56 object-cover"
-                  />
-                  <div className={`absolute top-4 right-4 text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg ${typeof camp.fees === 'number' && camp.fees > 0 ? 'bg-[#1e74d2]' : 'bg-[#1e74d2]'}`}>
-                    ${typeof camp.fees === 'number' && camp.fees > 0 ? camp.fees : 'Free'}
-                  </div>
-                </div>
-
-                <div className="p-6 flex-grow">
-                  <h3
-                    className="text-xl poppins font-bold text-slate-800 mb-3 truncate"
-                    title={camp.name}
-                  >
-                    {camp.name}
-                  </h3>
-
-                  <div className="space-y-3 text-slate-600 inter">
-                    <div className="flex items-center"><Icons.Calendar /><span>{new Date(camp.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} at {camp.time}</span></div>
-                    <div className="flex items-center"><Icons.Location /><span>{camp.location}</span></div>
-                  </div>
-                </div>
-
-                <div className="px-6 pb-6 pt-4 border-t border-slate-100 mt-4 flex justify-between items-center">
-                  <div className="flex flex-col  text-sm text-slate-500 font-medium">
-                    <p>Participants</p>                    
-                    <span className="flex items-center"><Icons.Participants />{camp.participantCount} </span>
-                  </div>
-
-                  <Link
-                    to={`/CampDetails/${camp._id}`}
-                    className="bg-[#1e74d2] text-white font-semibold px-5 py-2.5 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#1e74d2] focus:outline-none focus:ring-2 focus:ring-[#1e74d2] focus:ring-offset-2 flex items-center group-hover:pl-4 group-hover:pr-6"
-                  >
-                    Details
-                    <Icons.ArrowRight />
-                  </Link>
-                </div>
-              </div>
+                image={camp.imageUrl}
+                badgeText={typeof camp.fees === 'number' && camp.fees > 0 ? `$${camp.fees}` : 'Free'}
+                title={camp.name}
+                subtitle1={`${new Date(camp.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} at ${camp.time}`}
+                subtitle2={camp.location}
+                statLabel="Participants"
+                statValue={camp.participantCount}
+                buttonText="Details"
+                actionLink={`/CampDetails/${camp._id}`}
+              />
             ))}
           </div>
         ) : (

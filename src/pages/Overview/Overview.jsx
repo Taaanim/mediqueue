@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import useAuth from '../../hooks/useAuth/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure/useAxiosSecure';
 import DashboardStats from '../DashboardStats/DashboardStats';
+import { mockDb } from '../../mockData/mockDb';
 
 const recentActivity = [
   { id: 1, type: 'New Registration', text: 'Rahim Sheikh registered for "Dental Care Camp".', time: '2 hours ago' },
@@ -24,8 +25,8 @@ const Overview = () => {
   const [isAddPatientOpen, setIsAddPatientOpen] = useState(false);
   const [isDoctorSelectOpen, setIsDoctorSelectOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState('none');
-  
-  const [infoToken, setInfoToken] = useState(null); 
+
+  const [infoToken, setInfoToken] = useState(null);
   const [editData, setEditData] = useState(null);
 
   const [newPatient, setNewPatient] = useState({
@@ -36,8 +37,7 @@ const Overview = () => {
     queryKey: ['userRole', user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/users/${user.email}`);
-      return res.data[0]; 
+      return mockDb.users.find(u => u.email === user?.email) || { role: 'user' };
     }
   });
 
@@ -116,7 +116,7 @@ const Overview = () => {
   // We'll mock a small timeline by hour based on current state to make a good looking area chart
   const areaChartData = useMemo(() => {
     if (tokens.length === 0) return [];
-    
+
     // Distribute the tokens across a few artificial "hours" today to make the area chart look good
     const data = [
       { time: '09:00', Waiting: 0, Completed: 0, 'In Consult': 0, Emergency: 0 },
@@ -125,9 +125,9 @@ const Overview = () => {
       { time: '15:00', Waiting: 0, Completed: 2, 'In Consult': 0, Emergency: 0 },
       { time: '17:00', Waiting: 0, Completed: 3, 'In Consult': 0, Emergency: 0 },
     ];
-    
+
     tokens.forEach((t, i) => {
-      const bucket = i % data.length; 
+      const bucket = i % data.length;
       if (t.isEmergency) data[bucket].Emergency++;
       else if (t.status === 'Completed') data[bucket].Completed++;
       else if (t.status === 'In Consultation') data[bucket]['In Consult']++;
@@ -154,9 +154,9 @@ const Overview = () => {
   const emergencyCount = tokens.filter(t => t.isEmergency).length;
 
   // Option "none" is hidden from the actual token display filter
-  const filteredTokens = selectedDoctor === 'none' ? [] : 
-                         selectedDoctor === 'all' ? tokens : 
-                         tokens.filter(t => t.doctorId === selectedDoctor);
+  const filteredTokens = selectedDoctor === 'none' ? [] :
+    selectedDoctor === 'all' ? tokens :
+      tokens.filter(t => t.doctorId === selectedDoctor);
 
   return (
     <div className="space-y-8">
@@ -192,16 +192,16 @@ const Overview = () => {
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={areaChartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
-                  <linearGradient id="colorWait" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4}/><stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0}/></linearGradient>
-                  <linearGradient id="colorComp" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/><stop offset="95%" stopColor="#10b981" stopOpacity={0.0}/></linearGradient>
-                  <linearGradient id="colorEmg" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#ef4444" stopOpacity={0.4}/><stop offset="95%" stopColor="#ef4444" stopOpacity={0.0}/></linearGradient>
-                  <linearGradient id="colorCon" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#1e74d2" stopOpacity={0.4}/><stop offset="95%" stopColor="#1e74d2" stopOpacity={0.0}/></linearGradient>
+                  <linearGradient id="colorWait" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4} /><stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0} /></linearGradient>
+                  <linearGradient id="colorComp" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#10b981" stopOpacity={0.4} /><stop offset="95%" stopColor="#10b981" stopOpacity={0.0} /></linearGradient>
+                  <linearGradient id="colorEmg" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#ef4444" stopOpacity={0.4} /><stop offset="95%" stopColor="#ef4444" stopOpacity={0.0} /></linearGradient>
+                  <linearGradient id="colorCon" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#1e74d2" stopOpacity={0.4} /><stop offset="95%" stopColor="#1e74d2" stopOpacity={0.0} /></linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
                 <XAxis dataKey="time" stroke="#94a3b8" />
                 <YAxis stroke="#94a3b8" allowDecimals={false} />
                 <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '0.75rem' }} />
-                <Legend verticalAlign="top" height={36}/>
+                <Legend verticalAlign="top" height={36} />
                 <Area type="monotone" dataKey="Waiting" stroke="#f59e0b" fillOpacity={1} fill="url(#colorWait)" strokeWidth={2} />
                 <Area type="monotone" dataKey="Completed" stroke="#10b981" fillOpacity={1} fill="url(#colorComp)" strokeWidth={2} />
                 <Area type="monotone" dataKey="In Consult" stroke="#1e74d2" fillOpacity={1} fill="url(#colorCon)" strokeWidth={2} />
@@ -232,7 +232,7 @@ const Overview = () => {
               <div><p className="font-bold text-slate-800">Add New Patient</p><p className="text-sm text-slate-500">Register offline patient and generate token inline.</p></div>
             </div>
           </button>
-          
+
           {!isDoctorSelectOpen ? (
             <button onClick={() => setIsDoctorSelectOpen(true)} className="group bg-white p-6 rounded-2xl shadow-md border border-slate-200/80 flex items-center justify-between transition-all hover:border-[#1e74d2] hover:shadow-lg text-left">
               <div className="flex items-center gap-4">
@@ -244,7 +244,7 @@ const Overview = () => {
             <div className="group bg-white p-6 rounded-2xl shadow-md border border-slate-200/80 flex flex-col justify-center transition-all hover:border-[#1e74d2] hover:shadow-lg">
               <div className="flex justify-between items-center mb-3">
                 <label className="text-sm font-bold text-slate-800">Select Doctor</label>
-                <button onClick={() => {setIsDoctorSelectOpen(false); setSelectedDoctor('none');}} className="text-xs text-slate-500 hover:text-slate-800 font-bold px-2 py-1 rounded bg-slate-100 hover:bg-slate-200">Cancel</button>
+                <button onClick={() => { setIsDoctorSelectOpen(false); setSelectedDoctor('none'); }} className="text-xs text-slate-500 hover:text-slate-800 font-bold px-2 py-1 rounded bg-slate-100 hover:bg-slate-200">Cancel</button>
               </div>
               <select value={selectedDoctor} onChange={(e) => setSelectedDoctor(e.target.value)} className="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-[#1e74d2] text-sm bg-slate-50">
                 <option value="none">-- Select Doctor to View --</option>
@@ -272,7 +272,7 @@ const Overview = () => {
                     <td className="py-3 px-4 text-xs">{t.doctorName}</td>
                     <td className="py-3 px-4 font-semibold text-[#1e74d2]">{t.status}</td>
                     <td className="py-3 px-4">
-                      <button 
+                      <button
                         title="View Patient Info"
                         onClick={() => openInfoModal(t)}
                         className="p-2 bg-blue-100 text-[#1e74d2] rounded-xl hover:bg-blue-200 transition-colors cursor-pointer"
@@ -295,17 +295,17 @@ const Overview = () => {
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-bold text-slate-800 mb-4 poppins">Add Offline Patient</h3>
             <form onSubmit={handleAddPatientSubmit} className="space-y-3 text-xs">
-              <div><label className="block font-bold mb-1">Select Doctor *</label><select required value={newPatient.doctorId} onChange={e => setNewPatient({...newPatient, doctorId: e.target.value})} className="w-full px-3 py-2 border rounded-xl"><option value="" disabled>-- Select Doctor --</option>{doctors.map(d => <option key={d._id} value={d._id}>{d.name} ({d.specialty})</option>)}</select></div>
-              <div><label className="block font-bold mb-1">Patient Name *</label><input type="text" required value={newPatient.patientName} onChange={e => setNewPatient({...newPatient, patientName: e.target.value})} className="w-full px-3 py-2 border rounded-xl" /></div>
+              <div><label className="block font-bold mb-1">Select Doctor *</label><select required value={newPatient.doctorId} onChange={e => setNewPatient({ ...newPatient, doctorId: e.target.value })} className="w-full px-3 py-2 border rounded-xl"><option value="" disabled>-- Select Doctor --</option>{doctors.map(d => <option key={d._id} value={d._id}>{d.name} ({d.specialty})</option>)}</select></div>
+              <div><label className="block font-bold mb-1">Patient Name *</label><input type="text" required value={newPatient.patientName} onChange={e => setNewPatient({ ...newPatient, patientName: e.target.value })} className="w-full px-3 py-2 border rounded-xl" /></div>
               <div className="grid grid-cols-2 gap-3">
-                <div><label className="block font-bold mb-1">Phone</label><input type="text" value={newPatient.patientPhone} onChange={e => setNewPatient({...newPatient, patientPhone: e.target.value})} className="w-full px-3 py-2 border rounded-xl" /></div>
-                <div><label className="block font-bold mb-1">Age</label><input type="number" required value={newPatient.age} onChange={e => setNewPatient({...newPatient, age: e.target.value})} className="w-full px-3 py-2 border rounded-xl" /></div>
+                <div><label className="block font-bold mb-1">Phone</label><input type="text" value={newPatient.patientPhone} onChange={e => setNewPatient({ ...newPatient, patientPhone: e.target.value })} className="w-full px-3 py-2 border rounded-xl" /></div>
+                <div><label className="block font-bold mb-1">Age</label><input type="number" required value={newPatient.age} onChange={e => setNewPatient({ ...newPatient, age: e.target.value })} className="w-full px-3 py-2 border rounded-xl" /></div>
               </div>
               <div className="grid grid-cols-2 gap-3 items-center">
-                <div><label className="block font-bold mb-1">Gender</label><select value={newPatient.gender} onChange={e => setNewPatient({...newPatient, gender: e.target.value})} className="w-full px-3 py-2 border rounded-xl"><option>Male</option><option>Female</option><option>Other</option></select></div>
-                <div className="flex items-center gap-2 mt-4 bg-red-50 p-2 rounded-xl border border-red-100"><input type="checkbox" id="emgChk" checked={newPatient.isEmergency} onChange={e => setNewPatient({...newPatient, isEmergency: e.target.checked})} className="w-4 h-4 rounded"/><label htmlFor="emgChk" className="text-red-700 font-bold">Emergency?</label></div>
+                <div><label className="block font-bold mb-1">Gender</label><select value={newPatient.gender} onChange={e => setNewPatient({ ...newPatient, gender: e.target.value })} className="w-full px-3 py-2 border rounded-xl"><option>Male</option><option>Female</option><option>Other</option></select></div>
+                <div className="flex items-center gap-2 mt-4 bg-red-50 p-2 rounded-xl border border-red-100"><input type="checkbox" id="emgChk" checked={newPatient.isEmergency} onChange={e => setNewPatient({ ...newPatient, isEmergency: e.target.checked })} className="w-4 h-4 rounded" /><label htmlFor="emgChk" className="text-red-700 font-bold">Emergency?</label></div>
               </div>
-              <div><label className="block font-bold mb-1">Notes</label><textarea value={newPatient.medicalNotes} onChange={e => setNewPatient({...newPatient, medicalNotes: e.target.value})} className="w-full px-3 py-2 border rounded-xl h-16 resize-none"></textarea></div>
+              <div><label className="block font-bold mb-1">Notes</label><textarea value={newPatient.medicalNotes} onChange={e => setNewPatient({ ...newPatient, medicalNotes: e.target.value })} className="w-full px-3 py-2 border rounded-xl h-16 resize-none"></textarea></div>
               <div className="pt-4 flex justify-end gap-2"><button type="button" onClick={() => setIsAddPatientOpen(false)} className="px-4 py-2 text-slate-600 bg-slate-100 rounded-xl">Cancel</button><button type="submit" className="px-5 py-2 bg-[#1e74d2] text-white font-bold rounded-xl">Generate Token</button></div>
             </form>
           </div>

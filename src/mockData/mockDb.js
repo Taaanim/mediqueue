@@ -372,6 +372,41 @@ export const mockDb = {
       isAdmin_cancel: false
     }
   ],
+  consultationHistory: [
+    {
+      _id: 'ch_1',
+      patientEmail: 'user',
+      doctorName: 'Dr. Hasan Mahmud',
+      specialty: 'Ophthalmology',
+      date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+      reason: 'Routine eye checkup',
+      diagnosis: 'Mild myopia',
+      prescription: 'Use artificial tears twice daily. Get new glasses (-0.5D)',
+      notes: 'Advised to reduce screen time.'
+    },
+    {
+      _id: 'ch_2',
+      patientEmail: 'user',
+      doctorName: 'Dr. Rina Akter',
+      specialty: 'Dentistry',
+      date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+      reason: 'Severe toothache in lower right jaw',
+      diagnosis: 'Dental caries',
+      prescription: 'Ibuprofen 400mg, Amoxicillin 500mg',
+      notes: 'Scheduled for root canal next month.'
+    },
+    {
+      _id: 'ch_3',
+      patientEmail: 'user',
+      doctorName: 'Dr. Hasan Mahmud',
+      specialty: 'Ophthalmology',
+      date: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString(),
+      reason: 'Dry eyes',
+      diagnosis: 'Dry Eye Syndrome',
+      prescription: 'Systane Ultra Eye Drops',
+      notes: 'Patient responded well to initial drops.'
+    }
+  ],
   payments: [
     {
       _id: 'pay_1',

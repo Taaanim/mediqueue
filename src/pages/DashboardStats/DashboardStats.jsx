@@ -22,7 +22,7 @@ const StatCard = ({ title, value, subtext, icon, color = 'blue' }) => (
     </div>
 );
 
-const Analytics = () => {
+const DashboardStats = () => {
     const { user, loading: authLoading } = useAuth();
     const axiosSecure = useAxiosSecure();
 
@@ -206,4 +206,4 @@ const Analytics = () => {
     );
 };
 
-export default Analytics;
+export default DashboardStats;

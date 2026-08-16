@@ -1,7 +1,7 @@
-import React from 'react'; 
+import React from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router';
 import { toast, Bounce, ToastContainer } from 'react-toastify';
-import { useQuery } from '@tanstack/react-query'; 
+import { useQuery } from '@tanstack/react-query';
 import { GoHome, GoSignOut } from 'react-icons/go';
 import { MdOutlineDashboard, MdOutlinePerson, MdOutlineAddLocation, MdOutlineSettings } from 'react-icons/md';
 import { BsCheck2Square } from 'react-icons/bs';
@@ -32,10 +32,9 @@ const Dashboard = () => {
         window.location.replace('/SignIn');
     };
 
-    const navLinkClass = ({ isActive }) => 
-        `flex items-center gap-2 mb-3.5 w-fit transition-all ${
-            isActive 
-            ? 'text-[#1e74d2] font-bold drop-shadow-sm' 
+    const navLinkClass = ({ isActive }) =>
+        `flex items-center gap-2 mb-3.5 w-fit transition-all ${isActive
+            ? 'text-[#1e74d2] font-bold drop-shadow-sm'
             : 'text-gray-600 hover:text-[#1e74d2] font-medium'
         }`;
 
@@ -43,26 +42,35 @@ const Dashboard = () => {
         <>
             <NavLink end className={navLinkClass} to="/admin/dashboard"><MdOutlineDashboard size={20} /> Overview</NavLink>
             <NavLink className={navLinkClass} to="/admin/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Organizer Profile</NavLink>
-            
+
             <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
-              Smart Hospital OPD
+                DOCTOR AND STAFF
             </div>
-            <NavLink className={navLinkClass} to="/admin/dashboard/ManageQueueSystem"><MdOutlineSettings size={20} />Queue Management</NavLink>
-            <NavLink className={navLinkClass} to="/admin/dashboard/QueueAnalytics"><BsCheck2Square size={20} />Queue Analytics</NavLink>
-            
-            {/* <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
+            <NavLink className={navLinkClass} to="/admin/dashboard/DoctorAndStaff"><MdOutlinePerson size={20} />Doctor and Staff</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/Specialties"><BsCheck2Square size={20} />Specialties</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/TokenConfig"><MdOutlineSettings size={20} />Token Generation Config</NavLink>
+
+            <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
+                QUEUE MANAGEMENT
+            </div>
+            <NavLink className={navLinkClass} to="/admin/dashboard/TokenManagement"><MdOutlineAddLocation size={20} />Token Management</NavLink>
+            <NavLink className={navLinkClass} to="/admin/dashboard/QueueStats"><BsCheck2Square size={20} />Patient Statistics Report</NavLink>
+
+            {/* 
+            <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
               Camp Management
             </div>
             <NavLink className={navLinkClass} to="/admin/dashboard/AddACamp"><MdOutlineAddLocation size={20} />Add a Camp</NavLink>
             <NavLink className={navLinkClass} to="/admin/dashboard/ManageCamps"><MdOutlineSettings size={20} />Manage Camps</NavLink>
-            <NavLink className={navLinkClass} to="/admin/dashboard/ManageRegisteredCamps"><BsCheck2Square size={20} />Manage Registrations</NavLink> */}
+            <NavLink className={navLinkClass} to="/admin/dashboard/ManageRegisteredCamps"><BsCheck2Square size={20} />Manage Registrations</NavLink> 
+            */}
         </>
     );
 
     const doctorSidebarLinks = (
         <>
             <NavLink end className={navLinkClass} to="/doctor/dashboard"><MdOutlineDashboard size={20} />Live Patient Queue</NavLink>
-            <NavLink className={navLinkClass} to="/doctor/dashboard/QueueAnalytics"><BsCheck2Square size={20} />Queue Analytics</NavLink>
+            <NavLink className={navLinkClass} to="/doctor/dashboard/QueueStats"><BsCheck2Square size={20} />Queue Analytics</NavLink>
             <NavLink className={navLinkClass} to="/doctor/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Doctor Profile</NavLink>
         </>
     );
@@ -71,9 +79,9 @@ const Dashboard = () => {
         <>
             <NavLink className={navLinkClass} to="/user/dashboard/MyQueueTokens"><BsCheck2Square size={20} />My OPD Queue Tokens</NavLink>
             <NavLink className={navLinkClass} to="/user/dashboard/BrowseDoctors"><MdOutlineAddLocation size={20} />Browse OPD Doctors</NavLink>
-            
+
             <div className="pt-2 pb-1 border-t border-slate-300/60 my-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2">
-              Participant Account
+                Participant Account
             </div>
             <NavLink end className={navLinkClass} to="/user/dashboard"><MdOutlineDashboard size={20} /> Analytics</NavLink>
             <NavLink className={navLinkClass} to="/user/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Participant Profile</NavLink>
@@ -95,7 +103,7 @@ const Dashboard = () => {
 
     // Intelligently infer navigation view from current URL if opened via direct link
     const path = location.pathname.toLowerCase();
-    
+
     let computedRole = 'user';
     if (path.startsWith('/admin')) computedRole = 'admin';
     else if (path.startsWith('/doctor')) computedRole = 'doctor';
@@ -105,10 +113,10 @@ const Dashboard = () => {
     const activeRole = computedRole;
 
     const renderNav = () => {
-      if (isRoleLoading) return <SidebarSkeleton />;
-      if (activeRole === 'doctor') return doctorSidebarLinks;
-      if (activeRole === 'admin') return adminSidebarLinks;
-      return userSidebarLinks;
+        if (isRoleLoading) return <SidebarSkeleton />;
+        if (activeRole === 'doctor') return doctorSidebarLinks;
+        if (activeRole === 'admin') return adminSidebarLinks;
+        return userSidebarLinks;
     };
 
     return (
@@ -132,7 +140,7 @@ const Dashboard = () => {
                     <button
                         onClick={handleSignOut}
                         className="flex items-center cursor-pointer gap-4 w-full mt-2 py-3 rounded-xl text-red-400 font-semibold transition-all duration-300 hover:bg-red-100"
-                    > 
+                    >
                         <GoSignOut size={22} />
                         <span>Sign Out</span>
                     </button>
@@ -154,7 +162,7 @@ const Dashboard = () => {
                             <div className="flex-1 px-2 mx-2 font-bold">MediQueue Dashboard</div>
                         </div>
                         <div className="p-4 sm:p-6 min-h-screen">
-                           <Outlet />
+                            <Outlet />
                         </div>
                     </div>
                     <div className="drawer-side z-50">

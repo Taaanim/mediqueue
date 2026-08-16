@@ -9,6 +9,7 @@ import { toast, Bounce } from 'react-toastify';
 import useAxiosSecure from '../../hooks/useAxiosSecure/useAxiosSecure';
 import useAuth from '../../hooks/useAuth/useAuth';
 import SharedCard from "../../components/SharedCard/SharedCard";
+import { mockDb } from '../../mockData/mockDb';
 
 // SVG Icons matching AvailableCamps
 const Icons = {
@@ -49,8 +50,7 @@ const HospitalQueue = () => {
   const { data: doctors = [], isLoading: doctorsLoading } = useQuery({
     queryKey: ['doctors'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/doctors');
-      return res.data;
+      return mockDb.doctors;
     }
   });
 
@@ -58,8 +58,7 @@ const HospitalQueue = () => {
   const { data: specialties = [] } = useQuery({
     queryKey: ['specialties'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/specialties');
-      return res.data;
+      return mockDb.specialties;
     }
   });
 
@@ -67,8 +66,7 @@ const HospitalQueue = () => {
   const { data: tokens = [] } = useQuery({
     queryKey: ['queueTokens'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/queue-tokens');
-      return res.data;
+      return mockDb.queueTokens;
     },
     refetchInterval: 3000
   });
@@ -76,8 +74,19 @@ const HospitalQueue = () => {
   // Create Token Mutation
   const createTokenMutation = useMutation({
     mutationFn: async (payload) => {
-      const res = await axiosSecure.post('/queue-tokens', payload);
-      return res.data;
+      const doctor = mockDb.doctors.find(d => d._id === payload.doctorId);
+      const newToken = {
+        _id: 'tok_' + Math.floor(Math.random() * 1000),
+        tokenNumber: (doctor?.specialty.substring(0, 3).toUpperCase() || 'NEW') + '-' + Math.floor(Math.random() * 1000),
+        ...payload,
+        doctorName: doctor?.name,
+        specialty: doctor?.specialty,
+        roomNo: doctor?.roomNo,
+        status: 'Waiting',
+        createdAt: new Date().toISOString()
+      };
+      mockDb.queueTokens.push(newToken);
+      return { token: newToken };
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries(['queueTokens']);

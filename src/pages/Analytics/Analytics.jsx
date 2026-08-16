@@ -7,6 +7,7 @@ import {
 import { DollarSign, Hash, Stethoscope, Ticket, Calendar, ArrowRight, Activity, Sparkles, User } from 'lucide-react';
 import useAuth from '../../hooks/useAuth/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure/useAxiosSecure';
+import { mockDb } from '../../mockData/mockDb';
 
 const StatCard = ({ title, value, subtext, icon, color = 'blue' }) => (
     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 transition-all hover:shadow-md hover:-translate-y-0.5">
@@ -30,8 +31,7 @@ const Analytics = () => {
         queryKey: ['participantRegistrations', user?.email],
         enabled: !authLoading && !!user?.email,
         queryFn: async () => {
-            const { data } = await axiosSecure.get(`/participants/email/${user?.email || 'user'}`);
-            return data;
+            return mockDb.registeredCamps.filter(c => c.participant_email === user?.email || c.participant_email === 'user');
         },
     });
 
@@ -39,8 +39,7 @@ const Analytics = () => {
     const { data: tokens = [] } = useQuery({
         queryKey: ['queueTokens'],
         queryFn: async () => {
-            const res = await axiosSecure.get('/queue-tokens');
-            return res.data;
+            return mockDb.queueTokens;
         }
     });
 
@@ -90,7 +89,7 @@ const Analytics = () => {
 
                 {/* DIRECT OPD DOCTOR ACCESS BUTTON */}
                 <Link
-                    to="/Dashboard/BrowseDoctors"
+                    to="/user/dashboard/BrowseDoctors"
                     className="px-6 py-3.5 bg-[#1e74d2] text-white font-bold text-sm rounded-2xl shadow-md hover:bg-[#185dab] transition-all flex items-center gap-2 cursor-pointer shrink-0"
                 >
                     <Stethoscope className="w-5 h-5" />
@@ -140,7 +139,7 @@ const Analytics = () => {
                 </div>
 
                 <Link
-                    to="/Dashboard/MyQueueTokens"
+                    to="/user/dashboard/MyQueueTokens"
                     className="px-5 py-2.5 bg-blue-50 text-[#1e74d2] font-bold text-xs rounded-xl hover:bg-blue-100 transition-all flex items-center gap-1.5 whitespace-nowrap"
                 >
                     <span>View My Queue Tokens</span>
@@ -196,7 +195,7 @@ const Analytics = () => {
                     </div>
 
                     <Link
-                        to="/Dashboard/BrowseDoctors"
+                        to="/user/dashboard/BrowseDoctors"
                         className="mt-6 w-full text-center py-3 bg-[#1e74d2] text-white font-bold text-xs rounded-xl shadow hover:bg-[#185dab] transition-all block"
                     >
                         + Book New Doctor Token

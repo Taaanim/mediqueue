@@ -28,6 +28,7 @@ import MyQueueTokens from "../pages/MyQueueTokens/MyQueueTokens";
 import Doctors from "../pages/Doctors/Doctors";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import Contact from "../pages/Contact/Contact";
+import ConsultationHistory from "../pages/ConsultationHistory/ConsultationHistory";
 
 export const router = createBrowserRouter([
   {
@@ -80,6 +81,7 @@ export const router = createBrowserRouter([
       // { path: 'PaymentHistory', element: <PaymentHistory/> },
       { path: 'MyQueueTokens', element: <MyQueueTokens/> },
       { path: 'BrowseDoctors', element: <HospitalQueue/> },
+      { path: 'ConsultationHistory', element: <ConsultationHistory/> },
     ]
   },
   // {

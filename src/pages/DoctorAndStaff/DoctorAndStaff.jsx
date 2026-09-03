@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
+import { Plus, Info, FileText, Users, Activity } from 'lucide-react';
 import { toast, Bounce } from 'react-toastify';
 import useAxiosSecure from '../../hooks/useAxiosSecure/useAxiosSecure';
+import { mockDb } from '../../mockData/mockDb';
 
 const DoctorAndStaff = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
   const [isAddDoctorOpen, setIsAddDoctorOpen] = useState(false);
+  const [infoModalDoctor, setInfoModalDoctor] = useState(null);
   const [newDoctor, setNewDoctor] = useState({
     name: '',
     specialty: 'Ophthalmology',
@@ -34,6 +36,17 @@ const DoctorAndStaff = () => {
       return res.data;
     }
   });
+
+  const { data: allHistory = [] } = useQuery({
+    queryKey: ['allConsultationHistoryDoctorAndStaff'],
+    queryFn: async () => {
+      return mockDb.consultationHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+  });
+
+  const doctorHistory = infoModalDoctor 
+    ? allHistory.filter(h => h.doctorName === infoModalDoctor.name) 
+    : [];
 
   const addDoctorMutation = useMutation({
     mutationFn: async (payload) => {
@@ -95,6 +108,7 @@ const DoctorAndStaff = () => {
                 <th className="py-3.5 px-4">Max Tokens/Day</th>
                 <th className="py-3.5 px-4">Avg Consult Time</th>
                 <th className="py-3.5 px-4">Status</th>
+                <th className="py-3.5 px-4">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -119,6 +133,15 @@ const DoctorAndStaff = () => {
                     }`}>
                       {doc.isAvailable ? 'Active' : 'On Break'}
                     </span>
+                  </td>
+                  <td className="py-3.5 px-4">
+                    <button
+                      onClick={() => setInfoModalDoctor(doc)}
+                      className="p-1.5 bg-blue-50 text-[#1e74d2] rounded-lg hover:bg-blue-100 transition-colors"
+                      title="View Stats"
+                    >
+                      <Info className="w-4 h-4" />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -173,6 +196,64 @@ const DoctorAndStaff = () => {
                 <button type="submit" className="px-5 py-2 bg-[#1e74d2] text-white font-bold rounded-xl shadow-md hover:bg-blue-700">Save Doctor</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* INFO MODAL */}
+      {infoModalDoctor && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-start mb-6 border-b border-slate-100 pb-4">
+              <div className="flex items-center gap-4">
+                <img src={infoModalDoctor.imageUrl} alt={infoModalDoctor.name} className="w-14 h-14 rounded-2xl object-cover shadow-sm" />
+                <div>
+                  <h3 className="text-xl font-bold text-slate-800 poppins">{infoModalDoctor.name}</h3>
+                  <p className="text-sm text-[#1e74d2] font-semibold">{infoModalDoctor.specialty}</p>
+                </div>
+              </div>
+              <button onClick={() => setInfoModalDoctor(null)} className="text-slate-400 hover:text-slate-600 bg-slate-100 p-2 rounded-full cursor-pointer">✕</button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 flex items-center gap-4">
+                <div className="bg-white p-2 rounded-xl"><Users className="w-6 h-6 text-[#1e74d2]" /></div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Patients Seen</p>
+                  <p className="text-2xl font-black text-slate-800">{doctorHistory.length}</p>
+                </div>
+              </div>
+              <div className="bg-green-50 p-4 rounded-2xl border border-green-100 flex items-center gap-4">
+                <div className="bg-white p-2 rounded-xl"><Activity className="w-6 h-6 text-green-600" /></div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Avg Consult Time</p>
+                  <p className="text-2xl font-black text-slate-800">{infoModalDoctor.avgConsultTimeMinutes}m</p>
+                </div>
+              </div>
+            </div>
+
+            <h4 className="text-sm font-bold text-slate-800 poppins mb-3 flex items-center gap-2">
+              <FileText className="w-4 h-4 text-slate-400" /> Recent Consultation History
+            </h4>
+            
+            {doctorHistory.length === 0 ? (
+              <p className="text-center py-6 text-slate-500 text-sm bg-slate-50 rounded-2xl border border-slate-100">No past history found for this doctor.</p>
+            ) : (
+              <div className="space-y-3">
+                {doctorHistory.slice(0, 5).map(h => (
+                  <div key={h._id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
+                    <div>
+                      <p className="font-bold text-slate-800 text-sm">{h.patientName || h.patientEmail || 'Patient'}</p>
+                      <p className="text-xs text-slate-500">{new Date(h.date).toLocaleDateString()}</p>
+                    </div>
+                    <div className="text-right max-w-xs">
+                       <p className="text-xs font-semibold text-slate-700 truncate">{h.diagnosis}</p>
+                       <p className="text-[10px] text-slate-400 truncate mt-0.5">{h.reason}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

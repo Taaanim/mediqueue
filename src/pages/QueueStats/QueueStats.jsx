@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Printer, Users, CheckCircle, Clock, ShieldAlert, Activity, Stethoscope } from 'lucide-react';
+import { Printer, Users, CheckCircle, Clock, ShieldAlert, Activity, Stethoscope, Search, FileText } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import useAxiosSecure from '../../hooks/useAxiosSecure/useAxiosSecure';
+import { mockDb } from '../../mockData/mockDb';
 
 const COLORS = ['#1e74d2', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899'];
 
@@ -24,6 +25,24 @@ const QueueStats = () => {
       return res.data;
     }
   });
+
+  const [phoneSearch, setPhoneSearch] = useState('');
+  
+  const { data: consultationHistory = [] } = useQuery({
+    queryKey: ['allConsultationHistory'],
+    queryFn: async () => {
+      return mockDb.consultationHistory.map(h => ({
+        ...h,
+        patientPhone: h.patientPhone || '+8801700112233',
+        patientName: h.patientName || h.patientEmail || 'Patient'
+      })).sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+  });
+
+  const filteredHistory = useMemo(() => {
+    if (!phoneSearch.trim()) return consultationHistory.slice(0, 5);
+    return consultationHistory.filter(h => h.patientPhone.includes(phoneSearch.trim()));
+  }, [consultationHistory, phoneSearch]);
 
   const handlePrintPDFReport = () => {
     window.print();
@@ -88,6 +107,66 @@ const QueueStats = () => {
           <Printer className="w-4 h-4" />
           <span>Generate PDF</span>
         </button>
+      </div>
+
+      {/* PATIENT HISTORY SECTION */}
+      <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+          <div>
+            <h3 className="text-xl font-bold text-slate-800 poppins">Patient History</h3>
+            <p className="text-sm text-slate-500">View past consultations, diagnoses and prescriptions.</p>
+          </div>
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input 
+              type="text" 
+              placeholder="Search by phone..." 
+              value={phoneSearch}
+              onChange={(e) => setPhoneSearch(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#1e74d2] outline-none text-sm"
+            />
+          </div>
+        </div>
+
+        {filteredHistory.length === 0 ? (
+          <div className="text-center py-8">
+            <FileText className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+            <p className="text-slate-500 text-sm">No history found for this phone number.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm text-slate-600">
+              <thead className="bg-slate-50 text-slate-500 uppercase text-[11px] font-mono border-b border-slate-200">
+                <tr>
+                  <th className="py-3 px-4">Patient</th>
+                  <th className="py-3 px-4">Doctor</th>
+                  <th className="py-3 px-4">Disease / Diagnosis</th>
+                  <th className="py-3 px-4">Prescription</th>
+                  <th className="py-3 px-4">Date</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredHistory.map(h => (
+                  <tr key={h._id} className="hover:bg-slate-50">
+                    <td className="py-3 px-4">
+                      <div className="font-bold text-slate-800">{h.patientName}</div>
+                      <div className="text-xs text-slate-500">{h.patientPhone}</div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="font-semibold text-slate-700">{h.doctorName}</div>
+                      <div className="text-xs text-slate-500">{h.specialty}</div>
+                    </td>
+                    <td className="py-3 px-4 font-medium text-slate-700">{h.diagnosis}</td>
+                    <td className="py-3 px-4 text-xs bg-slate-50/50">{h.prescription}</td>
+                    <td className="py-3 px-4 text-xs whitespace-nowrap">
+                      {new Date(h.date).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* STAT CARDS */}

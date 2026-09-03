@@ -32,6 +32,7 @@ import Doctors from "../pages/Doctors/Doctors";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import Contact from "../pages/Contact/Contact";
 import ConsultationHistory from "../pages/ConsultationHistory/ConsultationHistory";
+import DoctorConsultationHistory from "../pages/ConsultationHistory/DoctorConsultationHistory";
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +75,7 @@ export const router = createBrowserRouter([
       { index: true, element: <DoctorQueue /> },
       { path: 'DoctorQueue', element: <DoctorQueue /> },
       { path: 'QueueStats', element: <QueueStats /> },
+      { path: 'ConsultationHistory', element: <DoctorConsultationHistory /> },
       { path: 'OrganizerProfile', element: <OrganizerProfile /> },
     ]
   },

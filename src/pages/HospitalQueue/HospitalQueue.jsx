@@ -36,6 +36,11 @@ const HospitalQueue = () => {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
 
+  // Track Token State
+  const [searchPhone, setSearchPhone] = useState('');
+  const [searchedTokens, setSearchedTokens] = useState([]);
+  const [searchError, setSearchError] = useState('');
+
   // Token Form State
   const [formData, setFormData] = useState({
     patientName: user?.displayName || '',
@@ -131,6 +136,25 @@ const HospitalQueue = () => {
       medicalNotes: formData.medicalNotes,
       isEmergency: formData.isEmergency,
     });
+  };
+
+  const handleSearchToken = (e) => {
+    e.preventDefault();
+    if (!searchPhone.trim()) {
+      setSearchError('Please enter a phone number.');
+      setSearchedTokens([]);
+      return;
+    }
+    
+    const myTokens = tokens.filter(t => t.patientPhone === searchPhone.trim() && t.status !== 'Completed');
+    
+    if (myTokens.length > 0) {
+      setSearchedTokens(myTokens);
+      setSearchError('');
+    } else {
+      setSearchedTokens([]);
+      setSearchError('No active tokens found for this phone number.');
+    }
   };
 
   // Helper to get active token
@@ -244,6 +268,62 @@ const HospitalQueue = () => {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </div>
+
+      {/* --- FIND MY TOKEN SECTION --- */}
+      <div className="w-11/12 2xl:w-9/12 mx-auto mb-8">
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-blue-100 bg-gradient-to-r from-blue-50 to-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="flex-1">
+             <h2 className="text-lg font-bold text-[#1e74d2] poppins flex items-center gap-2">
+               <Icons.Search /> Track Your Token
+             </h2>
+             <p className="text-sm text-slate-600 mt-1">Enter your registered phone number to view your current queue status and token serial</p>
+          </div>
+          <div className="flex-1 w-full">
+            <form onSubmit={handleSearchToken} className="flex gap-3">
+              <input 
+                type="tel"
+                placeholder="Enter phone number..."
+                value={searchPhone}
+                onChange={(e) => setSearchPhone(e.target.value)}
+                className="flex-1 px-4 py-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#1e74d2] outline-none"
+              />
+              <button 
+                type="submit"
+                className="px-6 py-2.5 bg-[#1e74d2] text-white rounded-lg text-sm font-semibold shadow-md hover:bg-[#185dab] transition-all whitespace-nowrap"
+              >
+                Find Token
+              </button>
+            </form>
+            {searchError && <p className="text-xs text-red-500 mt-2 font-medium">{searchError}</p>}
+            
+            {searchedTokens.length > 0 && (
+              <div className="mt-4 space-y-3">
+                {searchedTokens.map(token => (
+                 <div key={token._id} className="bg-white p-4 rounded-xl border border-blue-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                   <div>
+                     <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Your Token Serial</p>
+                     <p className="text-2xl font-black text-[#1e74d2] font-mono mt-1">{token.tokenNumber}</p>
+                     <p className="text-sm text-slate-700 mt-1"><span className="font-semibold">Doctor:</span> {token.doctorName}</p>
+                   </div>
+                   <div className="sm:text-right">
+                     <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Status</p>
+                     <span className={`inline-block mt-1 px-3 py-1 rounded-full text-xs font-bold ${
+                        token.status === 'Waiting' ? 'bg-orange-100 text-orange-700' :
+                        token.status === 'Calling' ? 'bg-green-100 text-green-700' :
+                        token.status === 'In Consultation' ? 'bg-blue-100 text-blue-700' :
+                        'bg-slate-100 text-slate-700'
+                      }`}>
+                        {token.status}
+                     </span>
+                     <Link to={`/TrackQueue/${token._id}`} className="block mt-2 text-xs text-[#1e74d2] font-semibold hover:underline">View Live Tracker &rarr;</Link>
+                   </div>
+                 </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

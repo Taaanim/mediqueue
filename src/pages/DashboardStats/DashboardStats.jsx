@@ -46,14 +46,14 @@ const DashboardStats = () => {
     const myTokens = tokens.filter(t => t.patientEmail === user?.email || t.patientEmail === 'user');
 
     const summaryStats = useMemo(() => {
-        const totalSpent = registrations.reduce((acc, reg) => acc + (parseFloat(reg.campFees || reg.camp_fee || 0)), 0);
-        const campsAttended = registrations.length;
+        const totalTokens = myTokens.length;
+        const emergencyTokens = myTokens.filter(t => t.isEmergency).length;
         const activeTokensCount = myTokens.filter(t => t.status === 'Waiting' || t.status === 'Calling' || t.status === 'In Consultation').length;
         const completedTokensCount = myTokens.filter(t => t.status === 'Completed').length;
 
         return {
-            totalSpent: `$${totalSpent.toFixed(2)}`,
-            campsAttended,
+            totalTokens,
+            emergencyTokens,
             activeTokensCount,
             completedTokensCount,
         };
@@ -61,10 +61,10 @@ const DashboardStats = () => {
 
     // Chart Data
     const chartData = [
-        { month: 'Jun', spending: 50, opdTokens: 1 },
-        { month: 'Jul', spending: 80, opdTokens: 2 },
-        { month: 'Aug', spending: 120, opdTokens: 3 },
-        { month: 'Sep', spending: 60, opdTokens: 1 },
+        { month: 'Jun', opdTokens: 1 },
+        { month: 'Jul', opdTokens: 2 },
+        { month: 'Aug', opdTokens: 3 },
+        { month: 'Sep', opdTokens: 1 },
     ];
 
     if (regLoading || authLoading) {
@@ -101,28 +101,28 @@ const DashboardStats = () => {
             {/* --- STATS GRID --- */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard 
-                  title="Total Spent" 
-                  value={summaryStats.totalSpent} 
-                  subtext="Medical camp fees & OPD" 
-                  icon={<DollarSign className="w-5 h-5"/>} 
+                  title="Total Tokens" 
+                  value={summaryStats.totalTokens} 
+                  subtext="All your queue tokens" 
+                  icon={<Ticket className="w-5 h-5"/>} 
                 />
                 <StatCard 
                   title="Active Queue Tokens" 
                   value={`${summaryStats.activeTokensCount} Tokens`} 
                   subtext="Live OPD waiting line" 
-                  icon={<Ticket className="w-5 h-5"/>} 
+                  icon={<Activity className="w-5 h-5"/>} 
                 />
                 <StatCard 
-                  title="Camps Registered" 
-                  value={summaryStats.campsAttended} 
-                  subtext="Outreach health camps" 
-                  icon={<Calendar className="w-5 h-5"/>} 
+                  title="Emergency Tokens" 
+                  value={summaryStats.emergencyTokens} 
+                  subtext="High priority visits" 
+                  icon={<Sparkles className="w-5 h-5"/>} 
                 />
                 <StatCard 
                   title="OPD Consultations" 
                   value={summaryStats.completedTokensCount} 
                   subtext="Doctor sessions completed" 
-                  icon={<Activity className="w-5 h-5"/>} 
+                  icon={<Stethoscope className="w-5 h-5"/>} 
                 />
             </div>
 
@@ -151,21 +151,21 @@ const DashboardStats = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
                     <h3 className="text-xl font-bold text-slate-800 mb-2 poppins">Activity & OPD Trends</h3>
-                    <p className="text-xs text-slate-500 mb-6">Monthly overview of OPD consultation tokens and health camp spending.</p>
+                    <p className="text-xs text-slate-500 mb-6">Monthly overview of your OPD consultation tokens.</p>
                     <div className="h-72">
                         <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={chartData}>
                                 <defs>
-                                    <linearGradient id="colorSpend" x1="0" y1="0" x2="0" y2="1">
+                                    <linearGradient id="colorTokens" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor="#1e74d2" stopOpacity={0.8}/>
                                         <stop offset="95%" stopColor="#1e74d2" stopOpacity={0}/>
                                     </linearGradient>
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                 <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} />
-                                <YAxis stroke="#94a3b8" fontSize={12} />
+                                <YAxis stroke="#94a3b8" allowDecimals={false} fontSize={12} />
                                 <Tooltip contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', borderColor: '#e2e8f0' }} />
-                                <Area type="monotone" dataKey="spending" name="Camp Fees ($)" stroke="#1e74d2" fillOpacity={1} fill="url(#colorSpend)" strokeWidth={2} />
+                                <Area type="monotone" dataKey="opdTokens" name="OPD Tokens" stroke="#1e74d2" fillOpacity={1} fill="url(#colorTokens)" strokeWidth={2} />
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>

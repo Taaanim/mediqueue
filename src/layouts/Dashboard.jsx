@@ -71,6 +71,7 @@ const Dashboard = () => {
         <>
             <NavLink end className={navLinkClass} to="/doctor/dashboard"><MdOutlineDashboard size={20} />Live Patient Queue</NavLink>
             <NavLink className={navLinkClass} to="/doctor/dashboard/QueueStats"><BsCheck2Square size={20} />Queue Analytics</NavLink>
+            <NavLink className={navLinkClass} to="/doctor/dashboard/ConsultationHistory"><BsCheck2Square size={20} />Patient History</NavLink>
             <NavLink className={navLinkClass} to="/doctor/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Doctor Profile</NavLink>
         </>
     );
@@ -87,8 +88,6 @@ const Dashboard = () => {
             <NavLink className={navLinkClass} to="/user/dashboard/OrganizerProfile"><MdOutlinePerson size={20} />Participant Profile</NavLink>
             {/* <NavLink className={navLinkClass} to="/user/dashboard/RegisteredCamps"><MdOutlineAddLocation size={20} />Registered Camps</NavLink>
             <NavLink className={navLinkClass} to="/user/dashboard/PaymentHistory"><MdOutlineSettings size={20} />Payment History</NavLink> */}
-            <NavLink className={navLinkClass} to="/user/dashboard/RegisteredCamps"><MdOutlineAddLocation size={20} />Registered Camps</NavLink>
-            <NavLink className={navLinkClass} to="/user/dashboard/PaymentHistory"><MdOutlineSettings size={20} />Payment History</NavLink>
             <NavLink className={navLinkClass} to="/user/dashboard/ConsultationHistory"><BsCheck2Square size={20} />Consultation History</NavLink>
         </>
     );

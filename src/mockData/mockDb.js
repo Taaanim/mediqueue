@@ -37,7 +37,7 @@ export const mockDb = {
       isAvailable: true,
       maxTokensPerDay: 35,
       avgConsultTimeMinutes: 15,
-      imageUrl: 'https://images.unsplash.com/photo-1594824813566-88855ce78961?auto=format&fit=crop&q=80&w=300',
+      imageUrl: '/dr_rina_akter.jpg',
       phone: '+880 1812-345678',
       bio: 'Expert Dental Surgeon specializing in restorative dentistry and cosmetic smiles.',
       unavailableTimings: []

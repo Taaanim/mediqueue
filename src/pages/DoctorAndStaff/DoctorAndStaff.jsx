@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Info, FileText, Users, Activity } from 'lucide-react';
+import { Plus, Info, FileText, Users, Activity, Edit2 } from 'lucide-react';
 import { toast, Bounce } from 'react-toastify';
 import useAxiosSecure from '../../hooks/useAxiosSecure/useAxiosSecure';
 import { mockDb } from '../../mockData/mockDb';
@@ -11,6 +11,10 @@ const DoctorAndStaff = () => {
 
   const [isAddDoctorOpen, setIsAddDoctorOpen] = useState(false);
   const [infoModalDoctor, setInfoModalDoctor] = useState(null);
+  
+  const [isEditingDoctor, setIsEditingDoctor] = useState(false);
+  const [editDoctorForm, setEditDoctorForm] = useState(null);
+
   const [newDoctor, setNewDoctor] = useState({
     name: '',
     specialty: 'Ophthalmology',
@@ -72,6 +76,33 @@ const DoctorAndStaff = () => {
       });
     }
   });
+
+  const updateDoctorMutation = useMutation({
+    mutationFn: async (payload) => {
+      await axiosSecure.patch(`/doctors/${payload._id}`, payload);
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries(['doctors']);
+      toast.success('Doctor info updated successfully!', {
+        position: 'top-right',
+        autoClose: 3000,
+        theme: 'colored',
+        transition: Bounce
+      });
+      setIsEditingDoctor(false);
+      setInfoModalDoctor({ ...infoModalDoctor, ...variables });
+    }
+  });
+
+  const handleEditClick = () => {
+    setEditDoctorForm({ ...infoModalDoctor });
+    setIsEditingDoctor(true);
+  };
+
+  const handleCloseModal = () => {
+    setInfoModalDoctor(null);
+    setIsEditingDoctor(false);
+  };
 
   return (
     <div className="space-y-6">
@@ -138,7 +169,7 @@ const DoctorAndStaff = () => {
                     <button
                       onClick={() => setInfoModalDoctor(doc)}
                       className="p-1.5 bg-blue-50 text-[#1e74d2] rounded-lg hover:bg-blue-100 transition-colors"
-                      title="View Stats"
+                      title="View / Edit Stats"
                     >
                       <Info className="w-4 h-4" />
                     </button>
@@ -192,15 +223,15 @@ const DoctorAndStaff = () => {
                 </div>
               </div>
               <div className="pt-4 flex justify-end gap-2">
-                <button type="button" onClick={() => setIsAddDoctorOpen(false)} className="px-4 py-2 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">Cancel</button>
-                <button type="submit" className="px-5 py-2 bg-[#1e74d2] text-white font-bold rounded-xl shadow-md hover:bg-blue-700">Save Doctor</button>
+                <button type="button" onClick={() => setIsAddDoctorOpen(false)} className="px-4 py-2 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-[#1e74d2] text-white font-bold rounded-xl shadow-md hover:bg-blue-700 cursor-pointer">Save Doctor</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* INFO MODAL */}
+      {/* INFO / EDIT MODAL */}
       {infoModalDoctor && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
@@ -212,47 +243,118 @@ const DoctorAndStaff = () => {
                   <p className="text-sm text-[#1e74d2] font-semibold">{infoModalDoctor.specialty}</p>
                 </div>
               </div>
-              <button onClick={() => setInfoModalDoctor(null)} className="text-slate-400 hover:text-slate-600 bg-slate-100 p-2 rounded-full cursor-pointer">✕</button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 flex items-center gap-4">
-                <div className="bg-white p-2 rounded-xl"><Users className="w-6 h-6 text-[#1e74d2]" /></div>
-                <div>
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Patients Seen</p>
-                  <p className="text-2xl font-black text-slate-800">{doctorHistory.length}</p>
-                </div>
-              </div>
-              <div className="bg-green-50 p-4 rounded-2xl border border-green-100 flex items-center gap-4">
-                <div className="bg-white p-2 rounded-xl"><Activity className="w-6 h-6 text-green-600" /></div>
-                <div>
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Avg Consult Time</p>
-                  <p className="text-2xl font-black text-slate-800">{infoModalDoctor.avgConsultTimeMinutes}m</p>
-                </div>
+              <div className="flex items-center gap-2">
+                {!isEditingDoctor && (
+                  <button 
+                    onClick={handleEditClick} 
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-[#1e74d2] hover:bg-blue-100 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" /> Edit Info
+                  </button>
+                )}
+                <button onClick={handleCloseModal} className="text-slate-400 hover:text-slate-600 bg-slate-100 p-2 rounded-full cursor-pointer transition-colors">✕</button>
               </div>
             </div>
 
-            <h4 className="text-sm font-bold text-slate-800 poppins mb-3 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-slate-400" /> Recent Consultation History
-            </h4>
-            
-            {doctorHistory.length === 0 ? (
-              <p className="text-center py-6 text-slate-500 text-sm bg-slate-50 rounded-2xl border border-slate-100">No past history found for this doctor.</p>
-            ) : (
-              <div className="space-y-3">
-                {doctorHistory.slice(0, 5).map(h => (
-                  <div key={h._id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
-                    <div>
-                      <p className="font-bold text-slate-800 text-sm">{h.patientName || h.patientEmail || 'Patient'}</p>
-                      <p className="text-xs text-slate-500">{new Date(h.date).toLocaleDateString()}</p>
-                    </div>
-                    <div className="text-right max-w-xs">
-                       <p className="text-xs font-semibold text-slate-700 truncate">{h.diagnosis}</p>
-                       <p className="text-[10px] text-slate-400 truncate mt-0.5">{h.reason}</p>
+            {isEditingDoctor ? (
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  updateDoctorMutation.mutate(editDoctorForm);
+                }}
+                className="space-y-4 mb-6"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Doctor Name</label>
+                    <input type="text" required value={editDoctorForm.name} onChange={(e) => setEditDoctorForm({ ...editDoctorForm, name: e.target.value })} className="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-[#1e74d2]" />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Specialty</label>
+                    <select value={editDoctorForm.specialty} onChange={(e) => setEditDoctorForm({ ...editDoctorForm, specialty: e.target.value })} className="w-full px-3 py-2 border rounded-xl bg-white outline-none focus:ring-2 focus:ring-[#1e74d2]">
+                      {specialties.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Room #</label>
+                    <input type="text" required value={editDoctorForm.roomNo} onChange={(e) => setEditDoctorForm({ ...editDoctorForm, roomNo: e.target.value })} className="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-[#1e74d2]" />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Phone</label>
+                    <input type="text" value={editDoctorForm.phone} onChange={(e) => setEditDoctorForm({ ...editDoctorForm, phone: e.target.value })} className="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-[#1e74d2]" />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Max Daily Tokens</label>
+                    <input type="number" value={editDoctorForm.maxTokensPerDay} onChange={(e) => setEditDoctorForm({ ...editDoctorForm, maxTokensPerDay: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-[#1e74d2]" />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Avg Consult Time (Mins)</label>
+                    <input type="number" value={editDoctorForm.avgConsultTimeMinutes} onChange={(e) => setEditDoctorForm({ ...editDoctorForm, avgConsultTimeMinutes: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-[#1e74d2]" />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Status</label>
+                    <div className="flex items-center gap-3 mt-2">
+                      <label className="flex items-center gap-1.5 cursor-pointer">
+                        <input type="radio" name="status" checked={editDoctorForm.isAvailable === true} onChange={() => setEditDoctorForm({ ...editDoctorForm, isAvailable: true })} className="accent-[#1e74d2]" />
+                        <span className="text-xs font-bold text-slate-700">Active</span>
+                      </label>
+                      <label className="flex items-center gap-1.5 cursor-pointer">
+                        <input type="radio" name="status" checked={editDoctorForm.isAvailable === false} onChange={() => setEditDoctorForm({ ...editDoctorForm, isAvailable: false })} className="accent-slate-500" />
+                        <span className="text-xs font-bold text-slate-700">On Break</span>
+                      </label>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+                
+                <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
+                  <button type="button" onClick={() => setIsEditingDoctor(false)} className="px-4 py-2 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl text-sm transition-colors cursor-pointer">Cancel</button>
+                  <button type="submit" disabled={updateDoctorMutation.isPending} className="px-5 py-2 bg-[#1e74d2] text-white font-bold rounded-xl shadow-md hover:bg-blue-700 text-sm transition-colors disabled:opacity-70 cursor-pointer">
+                    {updateDoctorMutation.isPending ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                  <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 flex items-center gap-4">
+                    <div className="bg-white p-2 rounded-xl"><Users className="w-6 h-6 text-[#1e74d2]" /></div>
+                    <div>
+                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Patients Seen</p>
+                      <p className="text-2xl font-black text-slate-800">{doctorHistory.length}</p>
+                    </div>
+                  </div>
+                  <div className="bg-green-50 p-4 rounded-2xl border border-green-100 flex items-center gap-4">
+                    <div className="bg-white p-2 rounded-xl"><Activity className="w-6 h-6 text-green-600" /></div>
+                    <div>
+                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Avg Consult Time</p>
+                      <p className="text-2xl font-black text-slate-800">{infoModalDoctor.avgConsultTimeMinutes}m</p>
+                    </div>
+                  </div>
+                </div>
+
+                <h4 className="text-sm font-bold text-slate-800 poppins mb-3 flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-slate-400" /> Recent Consultation History
+                </h4>
+                
+                {doctorHistory.length === 0 ? (
+                  <p className="text-center py-6 text-slate-500 text-sm bg-slate-50 rounded-2xl border border-slate-100">No past history found for this doctor.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {doctorHistory.slice(0, 5).map(h => (
+                      <div key={h._id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
+                        <div>
+                          <p className="font-bold text-slate-800 text-sm">{h.patientName || h.patientEmail || 'Patient'}</p>
+                          <p className="text-xs text-slate-500">{new Date(h.date).toLocaleDateString()}</p>
+                        </div>
+                        <div className="text-right max-w-xs">
+                          <p className="text-xs font-semibold text-slate-700 truncate">{h.diagnosis}</p>
+                          <p className="text-[10px] text-slate-400 truncate mt-0.5">{h.reason}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

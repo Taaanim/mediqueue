@@ -160,7 +160,7 @@ const Dashboard = () => {
                             </div>
                             <div className="flex-1 px-2 mx-2 font-bold">MediQueue Dashboard</div>
                         </div>
-                        <div className="p-4 sm:p-6 min-h-screen">
+                        <div className="p-4 sm:p-6 min-h-[calc(100vh-4rem)]">
                             <Outlet />
                         </div>
                     </div>
@@ -186,7 +186,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Main content area for desktop */}
-                <div className="hidden lg:block p-6 sm:p-8 h-full">
+                <div className="hidden lg:block p-6 sm:p-8 min-h-full">
                     <Outlet />
                 </div>
             </main>

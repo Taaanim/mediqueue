@@ -132,12 +132,16 @@ const ManageCamps = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen font-sans p-4 sm:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 tracking-tight">Manage Your Camps</h1>
-          <p className="mt-2 text-lg text-gray-500">Oversee, update, and organize all your scheduled medical camps.</p>
-        </header>
+    <div className="space-y-6">
+      <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+        <span className="bg-[#1e74d2] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+          Camp Management
+        </span>
+        <h1 className="text-3xl font-extrabold poppins text-slate-800 mt-2">
+          Manage Your Camps
+        </h1>
+        <p className="text-slate-600 text-sm mt-1 inter">Oversee, update, and organize all your scheduled medical camps.</p>
+      </div>
 
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <div className="p-6 border-b border-gray-200">
@@ -222,7 +226,6 @@ const ManageCamps = () => {
             </div>
           )}
         </div>
-      </div>
       <DeleteConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

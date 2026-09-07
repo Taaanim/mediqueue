@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useLocation } from 'react-router';
 import { 
   Users, Clock, Stethoscope, AlertTriangle, CheckCircle, Search, 
   ChevronRight, Activity, Calendar, ShieldAlert, Sparkles, MapPin, ArrowRight 
@@ -27,7 +27,10 @@ const HospitalQueue = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
+
+  const isDashboard = location.pathname.includes('/dashboard');
 
   const [selectedSpecialty, setSelectedSpecialty] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -197,17 +200,29 @@ const HospitalQueue = () => {
   }, [doctors, searchTerm, selectedSpecialty, sortBy]);
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-32">
+    <div className={isDashboard ? "space-y-6" : "bg-slate-50 min-h-screen pb-32"}>
       {/* --- Hero Section --- */}
-      <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] text-center py-20 px-4">
-        <h1 className="poppins text-5xl font-extrabold poppins text-gray-700">Smart Hospital OPD Queue</h1>
-        <p className="inter text-lg text-slate-600 mt-4 max-w-2xl mx-auto">
-          Select an on-duty specialist to generate your live OPD consultation token and track your queue position in real time.
-        </p>
-      </div>
+      {isDashboard ? (
+        <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+          <span className="bg-[#1e74d2] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+            Patient Portal
+          </span>
+          <h1 className="text-3xl font-extrabold poppins text-slate-800 mt-2">
+            Browse OPD Doctors & Queue
+          </h1>
+          <p className="text-slate-600 text-sm mt-1 inter">Select an on-duty specialist to generate your live OPD consultation token and track your queue position in real time.</p>
+        </div>
+      ) : (
+        <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] text-center py-20 px-4">
+          <h1 className="poppins text-5xl font-extrabold poppins text-gray-700">Smart Hospital OPD Queue</h1>
+          <p className="inter text-lg text-slate-600 mt-4 max-w-2xl mx-auto">
+            Select an on-duty specialist to generate your live OPD consultation token and track your queue position in real time.
+          </p>
+        </div>
+      )}
 
       {/* --- LIVE TICKER / DISPLAY BOARD --- */}
-      <div className="w-11/12 2xl:w-9/12 mx-auto -mt-8 z-10 relative mb-8">
+      <div className={isDashboard ? "w-full mb-6" : "w-11/12 2xl:w-9/12 mx-auto -mt-8 z-10 relative mb-8"}>
         <div className="bg-white rounded-xl shadow-md p-6 border border-slate-200">
           <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
             <div className="flex items-center gap-3">
@@ -273,7 +288,7 @@ const HospitalQueue = () => {
       </div>
 
       {/* --- FIND MY TOKEN SECTION --- */}
-      <div className="w-11/12 2xl:w-9/12 mx-auto mb-8">
+      <div className={isDashboard ? "w-full mb-6" : "w-11/12 2xl:w-9/12 mx-auto mb-8"}>
         <div className="bg-white rounded-xl shadow-sm p-6 border border-blue-100 bg-gradient-to-r from-blue-50 to-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex-1">
              <h2 className="text-lg font-bold text-[#1e74d2] poppins flex items-center gap-2">
@@ -329,8 +344,8 @@ const HospitalQueue = () => {
       </div>
 
       {/* --- Controls Bar --- */}
-      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-sm py-4 px-4 md:px-8 mb-8">
-        <div className="w-11/12 2xl:w-9/12 mx-auto flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className={`sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-sm py-4 ${isDashboard ? 'px-0' : 'px-4 md:px-8'} mb-8 rounded-2xl`}>
+        <div className={isDashboard ? "w-full flex flex-col md:flex-row gap-4 items-center justify-between" : "w-11/12 2xl:w-9/12 mx-auto flex flex-col md:flex-row gap-4 items-center justify-between"}>
             {/* Search Bar */}
             <div className="relative w-full md:w-1/3">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -383,7 +398,7 @@ const HospitalQueue = () => {
       </div>
       
       {/* --- Doctors Grid (Exact AvailableCamps Card UI Component Structure) --- */}
-      <div className="w-11/12 2xl:w-9/12 mx-auto py-4 px-4 md:px-8">
+      <div className={isDashboard ? "w-full" : "w-11/12 2xl:w-9/12 mx-auto py-4 px-4 md:px-8"}>
         {doctorsLoading ? (
           <div className="flex justify-center items-center h-64"><span className="loading loading-spinner loading-lg text-[#1e74d2]"></span></div>
         ) : filteredAndSortedDoctors.length > 0 ? (

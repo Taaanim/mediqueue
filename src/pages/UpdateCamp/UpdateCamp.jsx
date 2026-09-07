@@ -139,9 +139,16 @@ console.log(id);
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-10">
-      <h1 className="text-4xl font-bold text-center mb-2 text-gray-800">Update Medical Camp</h1>
-      <p className="text-center text-gray-500 mb-8">Edit the camp details below.</p>
+    <div className="space-y-6">
+      <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+        <span className="bg-[#1e74d2] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+          Camp Management
+        </span>
+        <h1 className="text-3xl font-extrabold poppins text-slate-800 mt-2">
+          Update Medical Camp
+        </h1>
+        <p className="text-slate-600 text-sm mt-1 inter">Edit the camp details below.</p>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-3 gap-8 bg-base-200 p-8 rounded-2xl shadow-lg">
         {/* Form Left */}

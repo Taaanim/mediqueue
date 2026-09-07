@@ -209,8 +209,8 @@ const Overview = () => {
         </div>
         <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xs">
           <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-[#1e74d2]"></span>
           </span>
           <span className="text-xs font-bold text-slate-700 font-mono">Live Sync Active</span>
         </div>
@@ -294,30 +294,6 @@ const Overview = () => {
                     {tab.label}
                   </button>
                 ))}
-              </div>
-            </div>
-
-            {/* Quick Metrics Bar */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-4 pt-3 border-t border-slate-100">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-blue-50/70 border border-blue-100 text-xs">
-                <span className="w-2 h-2 rounded-full bg-[#1e74d2]"></span>
-                <span className="text-slate-500 font-medium">Completed:</span>
-                <span className="font-bold font-mono text-[#1e74d2]">{completedCount}</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sky-50/70 border border-sky-100 text-xs">
-                <span className="w-2 h-2 rounded-full bg-[#0284c7]"></span>
-                <span className="text-slate-500 font-medium">In Consult:</span>
-                <span className="font-bold font-mono text-[#0284c7]">{tokens.filter(t => t.status === 'In Consultation').length}</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-50/70 border border-indigo-100 text-xs">
-                <span className="w-2 h-2 rounded-full bg-[#6366f1]"></span>
-                <span className="text-slate-500 font-medium">Waiting:</span>
-                <span className="font-bold font-mono text-[#6366f1]">{waitingCount}</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-50/70 border border-rose-100 text-xs">
-                <span className="w-2 h-2 rounded-full bg-[#f43f5e]"></span>
-                <span className="text-slate-500 font-medium">Emergency:</span>
-                <span className="font-bold font-mono text-[#f43f5e]">{emergencyCount}</span>
               </div>
             </div>
           </div>
@@ -408,6 +384,30 @@ const Overview = () => {
                 )}
               </AreaChart>
             </ResponsiveContainer>
+          </div>
+
+          {/* Quick Metrics Labels - Centered Below Graph */}
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 mt-6 pt-4 border-t border-slate-100">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-blue-50/80 border border-blue-100 text-xs">
+              <span className="w-2 h-2 rounded-full bg-[#1e74d2]"></span>
+              <span className="text-slate-600 font-medium">Completed:</span>
+              <span className="font-bold font-mono text-[#1e74d2] text-sm">{completedCount}</span>
+            </div>
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-sky-50/80 border border-sky-100 text-xs">
+              <span className="w-2 h-2 rounded-full bg-[#0284c7]"></span>
+              <span className="text-slate-600 font-medium">In Consult:</span>
+              <span className="font-bold font-mono text-[#0284c7] text-sm">{tokens.filter(t => t.status === 'In Consultation').length}</span>
+            </div>
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-indigo-50/80 border border-indigo-100 text-xs">
+              <span className="w-2 h-2 rounded-full bg-[#6366f1]"></span>
+              <span className="text-slate-600 font-medium">Waiting:</span>
+              <span className="font-bold font-mono text-[#6366f1] text-sm">{waitingCount}</span>
+            </div>
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-rose-50/80 border border-rose-100 text-xs">
+              <span className="w-2 h-2 rounded-full bg-[#f43f5e]"></span>
+              <span className="text-slate-600 font-medium">Emergency:</span>
+              <span className="font-bold font-mono text-[#f43f5e] text-sm">{emergencyCount}</span>
+            </div>
           </div>
         </div>
 

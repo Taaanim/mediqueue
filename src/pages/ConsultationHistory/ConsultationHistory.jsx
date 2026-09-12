@@ -22,12 +22,16 @@ const ConsultationHistory = () => {
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen p-4 sm:p-6 lg:p-8">
-      <div className="max-w-4xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-800 tracking-tight">Consultation History</h1>
-          <p className="mt-2 text-lg text-slate-500">A complete record of your past OPD visits and medical diagnoses.</p>
-        </header>
+    <div className="space-y-6">
+      <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+        <span className="bg-[#1e74d2] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+          Patient History
+        </span>
+        <h1 className="text-3xl font-extrabold poppins text-slate-800 mt-2">
+          Consultation History
+        </h1>
+        <p className="text-slate-600 text-sm mt-1 inter">A complete record of your past OPD visits, diagnoses, and prescriptions.</p>
+      </div>
 
         {history.length === 0 ? (
           <div className="bg-white p-12 rounded-3xl text-center shadow-sm border border-slate-200">
@@ -91,7 +95,6 @@ const ConsultationHistory = () => {
             ))}
           </div>
         )}
-      </div>
     </div>
   );
 };

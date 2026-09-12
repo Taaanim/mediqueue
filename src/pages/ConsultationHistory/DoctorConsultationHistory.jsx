@@ -63,12 +63,16 @@ const DoctorConsultationHistory = () => {
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen p-4 sm:p-6 lg:p-8">
-      <div className="max-w-4xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-800 tracking-tight">Patient Consultation History</h1>
-          <p className="mt-2 text-lg text-slate-500">Review past patient records, diagnoses, and prescriptions.</p>
-        </header>
+    <div className="space-y-6">
+      <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+        <span className="bg-[#1e74d2] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+          Doctor Workspace
+        </span>
+        <h1 className="text-3xl font-extrabold poppins text-slate-800 mt-2">
+          Patient Consultation History
+        </h1>
+        <p className="text-slate-600 text-sm mt-1 inter">Review past patient records, diagnoses, and prescriptions.</p>
+      </div>
 
         {/* --- FILTERS --- */}
         <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 mb-8 flex flex-col sm:flex-row gap-4 items-center">
@@ -164,7 +168,6 @@ const DoctorConsultationHistory = () => {
             ))}
           </div>
         )}
-      </div>
     </div>
   );
 };

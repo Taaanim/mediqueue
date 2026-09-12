@@ -72,7 +72,7 @@ const DashboardStats = () => {
     }
 
     return (
-        <div className="bg-slate-50 min-h-screen space-y-8 pb-16">
+        <div className="space-y-8">
             {/* --- WELCOME HERO BANNER (SOFT MEDICAMP LIGHT GRADIENT) --- */}
             <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] p-8 rounded-3xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>

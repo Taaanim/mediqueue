@@ -9,7 +9,7 @@ import {
 
 import useAuth from '../../hooks/useAuth/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure/useAxiosSecure';
-
+import { mockDb } from '../../mockData/mockDb';
 
 const FeedbackModal = ({ isOpen, onClose, onSubmit, campName }) => {
   
@@ -88,8 +88,7 @@ const RegisteredCamps = () => {
         queryKey: ['registeredCamps', user?.email],
         enabled: !authLoading && !!user?.email,
         queryFn: async () => {
-            const { data } = await axiosSecure.get(`/participants/email/${user.email}`);
-            return data;
+            return mockDb.registeredCamps.filter(c => c.participant_email === user?.email || c.participant_email === 'user');
         },
     });
 
@@ -116,7 +115,11 @@ const RegisteredCamps = () => {
     }, [searchTerm]);
 
     const { mutate: cancelRegistration } = useMutation({
-        mutationFn: (registrationId) => axiosSecure.delete(`/participants/delete/${registrationId}`),
+        mutationFn: async (registrationId) => {
+            const index = mockDb.registeredCamps.findIndex(c => c._id === registrationId);
+            if (index > -1) mockDb.registeredCamps.splice(index, 1);
+            return { deletedCount: 1 };
+        },
         onSuccess: () => {
             Swal.fire('Cancelled!', 'Your registration has been successfully cancelled.', 'success');
             queryClient.invalidateQueries({ queryKey: ['registeredCamps', user?.email] });
@@ -125,7 +128,11 @@ const RegisteredCamps = () => {
     });
 
     const { mutate: submitFeedback } = useMutation({
-        mutationFn: (feedbackData) => axiosSecure.post('/feedback', feedbackData),
+        mutationFn: async (feedbackData) => {
+            if (!mockDb.feedbacks) mockDb.feedbacks = [];
+            mockDb.feedbacks.push({ _id: 'fb_' + Date.now(), ...feedbackData });
+            return { insertedId: 'fb_' + Date.now() };
+        },
         onSuccess: () => Swal.fire('Thank You!', 'Your feedback has been submitted successfully.', 'success'),
         onError: (error) => Swal.fire('Error', `Could not submit feedback: ${error.message}`, 'error')
     });
@@ -173,12 +180,16 @@ const RegisteredCamps = () => {
     }
 
     return (
-        <div className="bg-slate-50 min-h-screen p-4 sm:p-6 lg:p-8">
-            <div className="max-w-7xl mx-auto">
-                <header className="mb-8">
-                    <h1 className="text-4xl font-bold text-slate-800 tracking-tight">My Registered Camps</h1>
-                    <p className="mt-2 text-lg text-slate-500">Here is a list of all the camps you have registered for.</p>
-                </header>
+        <div className="space-y-6">
+            <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+                <span className="bg-[#1e74d2] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                    My Registrations
+                </span>
+                <h1 className="text-3xl font-extrabold poppins text-slate-800 mt-2">
+                    Registered History
+                </h1>
+                <p className="text-slate-600 text-sm mt-1 inter">Here is a list of all the camps you have registered for.</p>
+            </div>
                 
                 <div className="mb-6">
                     <div className="relative w-full md:max-w-sm">
@@ -198,18 +209,16 @@ const RegisteredCamps = () => {
                         <table className="w-full text-sm text-left text-gray-700">
                             <thead className="bg-slate-100 border-b-2 border-slate-200">
                                 <tr>
-                                    <th className="p-4 text-sm font-semibold text-slate-600 uppercase tracking-wider">Camp Name</th>
-                                    <th className="p-4 text-sm font-semibold text-slate-600 uppercase tracking-wider">Camp Fees</th>
+                                    <th className="p-4 text-sm font-semibold text-slate-600 uppercase tracking-wider">Fees</th>
                                     <th className="p-4 text-sm font-semibold text-slate-600 uppercase tracking-wider">Payment Status</th>
                                     <th className="p-4 text-sm font-semibold text-slate-600 uppercase tracking-wider">Confirmation Status</th>
-                                    <th className="p-4 text-center text-sm font-semibold text-slate-600 uppercase tracking-wider">Actions</th>
+                                    <th className="p-4 text-center text-sm font-semibold text-slate-600 uppercase tracking-wider">Feedback</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-200">
                                 {/* --- 4. Map over the paginated list --- */}
                                 {paginatedCamps.length > 0 ? paginatedCamps.map((reg) => (
                                     <tr key={reg._id} className="hover:bg-slate-50">
-                                        <td className="p-4 font-medium text-slate-900">{reg.camp_name}</td>
                                         <td className="p-4">${reg.camp_fee}</td>
                                         <td className="p-4">
                                             {reg.isPayment_confirmed === true ? (
@@ -231,11 +240,9 @@ const RegisteredCamps = () => {
                                                     <XCircle className="w-4 h-4" /> Cancel
                                                 </button>)}
                                                 
-                                                {reg.isPayment_confirmed === true && (
-                                                     <button onClick={() => handleFeedbackClick(reg)} className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded-lg font-semibold text-[#1e74d2] bg-indigo-100 hover:bg-indigo-200">
-                                                         <MessageSquare className="w-4 h-4" /> Feedback
-                                                     </button>
-                                                )}
+                                                <button onClick={() => handleFeedbackClick(reg)} className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded-lg font-semibold text-[#1e74d2] bg-indigo-100 hover:bg-indigo-200">
+                                                    <MessageSquare className="w-4 h-4" /> Feedback
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -272,7 +279,6 @@ const RegisteredCamps = () => {
                         </div>
                     )}
                 </div>
-            </div>
 
             <FeedbackModal 
                 isOpen={isFeedbackModalOpen}

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useLocation } from 'react-router';
 import { 
   Users, Clock, Stethoscope, AlertTriangle, CheckCircle, Search, 
   ChevronRight, Activity, Calendar, ShieldAlert, Sparkles, MapPin, ArrowRight 
@@ -8,6 +8,8 @@ import {
 import { toast, Bounce } from 'react-toastify';
 import useAxiosSecure from '../../hooks/useAxiosSecure/useAxiosSecure';
 import useAuth from '../../hooks/useAuth/useAuth';
+import SharedCard from "../../components/SharedCard/SharedCard";
+import { mockDb } from '../../mockData/mockDb';
 
 // SVG Icons matching AvailableCamps
 const Icons = {
@@ -25,7 +27,10 @@ const HospitalQueue = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
+
+  const isDashboard = location.pathname.includes('/dashboard');
 
   const [selectedSpecialty, setSelectedSpecialty] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -33,6 +38,11 @@ const HospitalQueue = () => {
   const [layout, setLayout] = useState('grid-cols-1 md:grid-cols-2');
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
+
+  // Track Token State
+  const [searchPhone, setSearchPhone] = useState('');
+  const [searchedTokens, setSearchedTokens] = useState([]);
+  const [searchError, setSearchError] = useState('');
 
   // Token Form State
   const [formData, setFormData] = useState({
@@ -48,8 +58,7 @@ const HospitalQueue = () => {
   const { data: doctors = [], isLoading: doctorsLoading } = useQuery({
     queryKey: ['doctors'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/doctors');
-      return res.data;
+      return mockDb.doctors;
     }
   });
 
@@ -57,8 +66,7 @@ const HospitalQueue = () => {
   const { data: specialties = [] } = useQuery({
     queryKey: ['specialties'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/specialties');
-      return res.data;
+      return mockDb.specialties;
     }
   });
 
@@ -66,8 +74,7 @@ const HospitalQueue = () => {
   const { data: tokens = [] } = useQuery({
     queryKey: ['queueTokens'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/queue-tokens');
-      return res.data;
+      return mockDb.queueTokens;
     },
     refetchInterval: 3000
   });
@@ -75,8 +82,19 @@ const HospitalQueue = () => {
   // Create Token Mutation
   const createTokenMutation = useMutation({
     mutationFn: async (payload) => {
-      const res = await axiosSecure.post('/queue-tokens', payload);
-      return res.data;
+      const doctor = mockDb.doctors.find(d => d._id === payload.doctorId);
+      const newToken = {
+        _id: 'tok_' + Math.floor(Math.random() * 1000),
+        tokenNumber: (doctor?.specialty.substring(0, 3).toUpperCase() || 'NEW') + '-' + Math.floor(Math.random() * 1000),
+        ...payload,
+        doctorName: doctor?.name,
+        specialty: doctor?.specialty,
+        roomNo: doctor?.roomNo,
+        status: 'Waiting',
+        createdAt: new Date().toISOString()
+      };
+      mockDb.queueTokens.push(newToken);
+      return { token: newToken };
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries(['queueTokens']);
@@ -123,10 +141,35 @@ const HospitalQueue = () => {
     });
   };
 
+  const handleSearchToken = (e) => {
+    e.preventDefault();
+    if (!searchPhone.trim()) {
+      setSearchError('Please enter a phone number.');
+      setSearchedTokens([]);
+      return;
+    }
+    
+    const myTokens = tokens.filter(t => t.patientPhone === searchPhone.trim() && t.status !== 'Completed');
+    
+    if (myTokens.length > 0) {
+      setSearchedTokens(myTokens);
+      setSearchError('');
+    } else {
+      setSearchedTokens([]);
+      setSearchError('No active tokens found for this phone number.');
+    }
+  };
+
   // Helper to get active token
   const getDoctorActiveToken = (doctorId) => {
     const docTokens = tokens.filter(t => t.doctorId === doctorId && (t.status === 'Calling' || t.status === 'In Consultation'));
     return docTokens[0] || null;
+  };
+
+  // Helper to get next waiting token
+  const getDoctorNextToken = (doctorId) => {
+    const waitingTokens = tokens.filter(t => t.doctorId === doctorId && t.status === 'Waiting');
+    return waitingTokens[0] || null;
   };
 
   // Helper to count waiting tokens
@@ -157,17 +200,29 @@ const HospitalQueue = () => {
   }, [doctors, searchTerm, selectedSpecialty, sortBy]);
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-32">
+    <div className={isDashboard ? "space-y-6" : "bg-slate-50 min-h-screen pb-32"}>
       {/* --- Hero Section --- */}
-      <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] text-center py-20 px-4">
-        <h1 className="poppins text-5xl font-extrabold poppins text-gray-700">Smart Hospital OPD Queue</h1>
-        <p className="inter text-lg text-slate-600 mt-4 max-w-2xl mx-auto">
-          Select an on-duty specialist to generate your live OPD consultation token and track your queue position in real time.
-        </p>
-      </div>
+      {isDashboard ? (
+        <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+          <span className="bg-[#1e74d2] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+            Patient Portal
+          </span>
+          <h1 className="text-3xl font-extrabold poppins text-slate-800 mt-2">
+            Browse OPD Doctors & Queue
+          </h1>
+          <p className="text-slate-600 text-sm mt-1 inter">Select an on-duty specialist to generate your live OPD consultation token and track your queue position in real time.</p>
+        </div>
+      ) : (
+        <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] text-center py-20 px-4">
+          <h1 className="poppins text-5xl font-extrabold poppins text-gray-700">Smart Hospital OPD Queue</h1>
+          <p className="inter text-lg text-slate-600 mt-4 max-w-2xl mx-auto">
+            Select an on-duty specialist to generate your live OPD consultation token and track your queue position in real time.
+          </p>
+        </div>
+      )}
 
       {/* --- LIVE TICKER / DISPLAY BOARD --- */}
-      <div className="w-11/12 2xl:w-9/12 mx-auto -mt-8 z-10 relative mb-8">
+      <div className={isDashboard ? "w-full mb-6" : "w-11/12 2xl:w-9/12 mx-auto -mt-8 z-10 relative mb-8"}>
         <div className="bg-white rounded-xl shadow-md p-6 border border-slate-200">
           <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
             <div className="flex items-center gap-3">
@@ -184,12 +239,13 @@ const HospitalQueue = () => {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-thin scrollbar-thumb-slate-300 scroll-smooth">
             {doctors.map(doc => {
               const activeTok = getDoctorActiveToken(doc._id);
+              const nextTok = getDoctorNextToken(doc._id);
               return (
-                <div key={doc._id} className="bg-slate-50 rounded-xl p-3.5 border border-slate-200">
-                  <div className="flex justify-between items-start mb-1.5">
+                <div key={doc._id} className="w-[85%] sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] shrink-0 bg-slate-50 rounded-xl p-3.5 border border-slate-200 shadow-xs">
+                  <div className="flex justify-between items-start mb-2">
                     <div>
                       <p className="font-bold text-slate-800 text-sm truncate">{doc.name}</p>
                       <p className="text-xs text-slate-500">{doc.specialty} • {doc.roomNo}</p>
@@ -199,16 +255,30 @@ const HospitalQueue = () => {
                     </span>
                   </div>
 
-                  <div className="bg-white p-2.5 rounded-lg text-center mt-2 border border-slate-200">
-                    <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Now Serving</p>
-                    {activeTok ? (
-                      <div className="mt-1">
-                        <span className="text-xl font-black text-[#1e74d2] font-mono">{activeTok.tokenNumber}</span>
-                        <p className="text-xs font-medium text-slate-700 truncate">{activeTok.patientName}</p>
-                      </div>
-                    ) : (
-                      <span className="text-xs font-medium text-slate-400 block py-1">No Active Token</span>
-                    )}
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    <div className="bg-white p-2 rounded-lg text-center border border-slate-200">
+                      <p className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Now Serving</p>
+                      {activeTok ? (
+                        <div className="mt-0.5">
+                          <span className="text-base font-black text-[#1e74d2] font-mono">{activeTok.tokenNumber}</span>
+                          <p className="text-[10px] font-medium text-slate-700 truncate">{activeTok.patientName}</p>
+                        </div>
+                      ) : (
+                        <span className="text-xs font-medium text-slate-400 block py-1">None</span>
+                      )}
+                    </div>
+
+                    <div className="bg-blue-50/70 p-2 rounded-lg text-center border border-blue-100">
+                      <p className="text-[9px] uppercase font-bold tracking-wider text-[#1e74d2]">Next In Line</p>
+                      {nextTok ? (
+                        <div className="mt-0.5">
+                          <span className="text-base font-bold text-slate-800 font-mono">{nextTok.tokenNumber}</span>
+                          <p className="text-[10px] font-medium text-slate-600 truncate">{nextTok.patientName}</p>
+                        </div>
+                      ) : (
+                        <span className="text-xs font-medium text-slate-400 block py-1">None</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
@@ -217,9 +287,65 @@ const HospitalQueue = () => {
         </div>
       </div>
 
+      {/* --- FIND MY TOKEN SECTION --- */}
+      <div className={isDashboard ? "w-full mb-6" : "w-11/12 2xl:w-9/12 mx-auto mb-8"}>
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-blue-100 bg-gradient-to-r from-blue-50 to-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="flex-1">
+             <h2 className="text-lg font-bold text-[#1e74d2] poppins flex items-center gap-2">
+               <Icons.Search /> Track Your Token
+             </h2>
+             <p className="text-sm text-slate-600 mt-1">Enter your registered phone number to view your current queue status and token serial</p>
+          </div>
+          <div className="flex-1 w-full">
+            <form onSubmit={handleSearchToken} className="flex gap-3">
+              <input 
+                type="tel"
+                placeholder="Enter phone number..."
+                value={searchPhone}
+                onChange={(e) => setSearchPhone(e.target.value)}
+                className="flex-1 px-4 py-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#1e74d2] outline-none"
+              />
+              <button 
+                type="submit"
+                className="px-6 py-2.5 bg-[#1e74d2] text-white rounded-lg text-sm font-semibold shadow-md hover:bg-[#185dab] transition-all whitespace-nowrap"
+              >
+                Find Token
+              </button>
+            </form>
+            {searchError && <p className="text-xs text-red-500 mt-2 font-medium">{searchError}</p>}
+            
+            {searchedTokens.length > 0 && (
+              <div className="mt-4 space-y-3">
+                {searchedTokens.map(token => (
+                 <div key={token._id} className="bg-white p-4 rounded-xl border border-blue-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                   <div>
+                     <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Your Token Serial</p>
+                     <p className="text-2xl font-black text-[#1e74d2] font-mono mt-1">{token.tokenNumber}</p>
+                     <p className="text-sm text-slate-700 mt-1"><span className="font-semibold">Doctor:</span> {token.doctorName}</p>
+                   </div>
+                   <div className="sm:text-right">
+                     <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Status</p>
+                     <span className={`inline-block mt-1 px-3 py-1 rounded-full text-xs font-bold ${
+                        token.status === 'Waiting' ? 'bg-orange-100 text-orange-700' :
+                        token.status === 'Calling' ? 'bg-green-100 text-green-700' :
+                        token.status === 'In Consultation' ? 'bg-blue-100 text-blue-700' :
+                        'bg-slate-100 text-slate-700'
+                      }`}>
+                        {token.status}
+                     </span>
+                     <Link to={`/TrackQueue/${token._id}`} className="block mt-2 text-xs text-[#1e74d2] font-semibold hover:underline">View Live Tracker &rarr;</Link>
+                   </div>
+                 </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* --- Controls Bar --- */}
-      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-sm py-4 px-4 md:px-8 mb-8">
-        <div className="w-11/12 2xl:w-9/12 mx-auto flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className={`sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-sm py-4 ${isDashboard ? 'px-0' : 'px-4 md:px-8'} mb-8 rounded-2xl`}>
+        <div className={isDashboard ? "w-full flex flex-col md:flex-row gap-4 items-center justify-between" : "w-11/12 2xl:w-9/12 mx-auto flex flex-col md:flex-row gap-4 items-center justify-between"}>
             {/* Search Bar */}
             <div className="relative w-full md:w-1/3">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -272,7 +398,7 @@ const HospitalQueue = () => {
       </div>
       
       {/* --- Doctors Grid (Exact AvailableCamps Card UI Component Structure) --- */}
-      <div className="w-11/12 2xl:w-9/12 mx-auto py-4 px-4 md:px-8">
+      <div className={isDashboard ? "w-full" : "w-11/12 2xl:w-9/12 mx-auto py-4 px-4 md:px-8"}>
         {doctorsLoading ? (
           <div className="flex justify-center items-center h-64"><span className="loading loading-spinner loading-lg text-[#1e74d2]"></span></div>
         ) : filteredAndSortedDoctors.length > 0 ? (
@@ -283,59 +409,21 @@ const HospitalQueue = () => {
               const estWaitMinutes = waitingCount * doc.avgConsultTimeMinutes;
 
               return (
-                <div
+                <SharedCard
                   key={doc._id}
-                  className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1.5 group border border-slate-200 flex flex-col"
-                >
-                  <div className="relative">
-                    <img
-                      src={doc.imageUrl}
-                      alt={doc.name}
-                      className="w-full h-56 object-cover"
-                    />
-                    <div className={`absolute top-4 right-4 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg ${doc.isAvailable ? 'bg-[#1e74d2]' : 'bg-slate-600'}`}>
-                      {doc.isAvailable ? 'Available' : 'On Break'}
-                    </div>
-                  </div>
-
-                  <div className="p-6 flex-grow">
-                    <h3
-                      className="text-xl poppins font-bold text-slate-800 mb-3 truncate"
-                      title={doc.name}
-                    >
-                      {doc.name}
-                    </h3>
-
-                    <div className="space-y-3 text-slate-600 inter">
-                      <div className="flex items-center">
-                        <Icons.Calendar />
-                        <span className="font-semibold text-[#1e74d2]">{doc.specialty}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Icons.Location />
-                        <span>{doc.roomNo} • {doc.phone}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="px-6 pb-6 pt-4 border-t border-slate-100 mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div className="flex flex-col text-sm text-slate-500 font-medium">
-                      <p>Queue Status</p>                    
-                      <span className="flex items-center gap-1 font-bold text-slate-700">
-                        <Icons.Participants />{waitingCount} Waiting ({estWaitMinutes} mins)
-                      </span>
-                    </div>
-
-                    <button
-                      onClick={() => handleOpenTokenModal(doc)}
-                      disabled={!doc.isAvailable}
-                      className="bg-[#1e74d2] text-white font-semibold px-5 py-2.5 rounded-lg transition-all duration-300 ease-in-out hover:bg-[#185dab] focus:outline-none focus:ring-2 focus:ring-[#1e74d2] focus:ring-offset-2 flex items-center gap-2 group-hover:pl-4 group-hover:pr-6 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap w-full sm:w-auto justify-center"
-                    >
-                      Get Token
-                      <Icons.ArrowRight />
-                    </button>
-                  </div>
-                </div>
+                  image={doc.imageUrl}
+                  badgeText={doc.isAvailable ? 'Available' : 'On Break'}
+                  badgeColorClass={doc.isAvailable ? 'bg-[#1e74d2]' : 'bg-slate-600'}
+                  title={doc.name}
+                  subtitle1={doc.specialty}
+                  subtitle1Highlight={true}
+                  subtitle2={`${doc.roomNo} • ${doc.phone}`}
+                  statLabel="Queue Status"
+                  statValue={`${waitingCount} Waiting (${estWaitMinutes} mins)`}
+                  buttonText="Get Token"
+                  onAction={() => handleOpenTokenModal(doc)}
+                  actionDisabled={!doc.isAvailable}
+                />
               );
             })}
           </div>

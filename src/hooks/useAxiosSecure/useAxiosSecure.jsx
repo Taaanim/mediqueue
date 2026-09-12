@@ -38,6 +38,9 @@ const useAxiosSecure = () => {
             if (url.includes('/payments')) {
                 return { data: mockDb.payments };
             }
+            if (url.includes('/feedbacks')) {
+                return { data: mockDb.feedbacks };
+            }
             return { data: [] };
         },
         post: async (url, payload) => {
@@ -102,6 +105,36 @@ const useAxiosSecure = () => {
             return { data: { insertedId: 'mock_id', token: 'mock_token' } };
         },
         patch: async (url, payload) => {
+            if (url.includes('/queue-tokens/absent/')) {
+                const tokenId = url.split('/').pop();
+                const idx = mockDb.queueTokens.findIndex(t => t._id === tokenId);
+                if (idx !== -1) {
+                    const token = mockDb.queueTokens.splice(idx, 1)[0];
+                    token.isPresent = false;
+                    mockDb.queueTokens.push(token); // move to back
+                    return { data: { modifiedCount: 1, token } };
+                }
+            }
+            if (url.includes('/queue-tokens/present/')) {
+                const tokenId = url.split('/').pop();
+                const token = mockDb.queueTokens.find(t => t._id === tokenId);
+                if (token) {
+                    token.isPresent = true;
+                }
+                return { data: { modifiedCount: 1, token } };
+            }
+            if (url.includes('/queue-tokens/emergency/')) {
+                const tokenId = url.split('/').pop();
+                const idx = mockDb.queueTokens.findIndex(t => t._id === tokenId);
+                if (idx !== -1) {
+                    const token = mockDb.queueTokens.splice(idx, 1)[0];
+                    token.isEmergency = true;
+                    // Move to front (after existing emergencies)
+                    const lastEmergencyIdx = mockDb.queueTokens.findLastIndex(t => t.isEmergency);
+                    mockDb.queueTokens.splice(lastEmergencyIdx + 1, 0, token);
+                    return { data: { modifiedCount: 1, token } };
+                }
+            }
             if (url.includes('/queue-tokens/')) {
                 const tokenId = url.split('/').pop();
                 const token = mockDb.queueTokens.find(t => t._id === tokenId);

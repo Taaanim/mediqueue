@@ -37,7 +37,7 @@ export const mockDb = {
       isAvailable: true,
       maxTokensPerDay: 35,
       avgConsultTimeMinutes: 15,
-      imageUrl: 'https://images.unsplash.com/photo-1594824813566-88855ce78961?auto=format&fit=crop&q=80&w=300',
+      imageUrl: '/dr_rina_akter.jpg',
       phone: '+880 1812-345678',
       bio: 'Expert Dental Surgeon specializing in restorative dentistry and cosmetic smiles.',
       unavailableTimings: []
@@ -372,6 +372,41 @@ export const mockDb = {
       isAdmin_cancel: false
     }
   ],
+  consultationHistory: [
+    {
+      _id: 'ch_1',
+      patientEmail: 'user',
+      doctorName: 'Dr. Hasan Mahmud',
+      specialty: 'Ophthalmology',
+      date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+      reason: 'Routine eye checkup',
+      diagnosis: 'Mild myopia',
+      prescription: 'Use artificial tears twice daily. Get new glasses (-0.5D)',
+      notes: 'Advised to reduce screen time.'
+    },
+    {
+      _id: 'ch_2',
+      patientEmail: 'user',
+      doctorName: 'Dr. Rina Akter',
+      specialty: 'Dentistry',
+      date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+      reason: 'Severe toothache in lower right jaw',
+      diagnosis: 'Dental caries',
+      prescription: 'Ibuprofen 400mg, Amoxicillin 500mg',
+      notes: 'Scheduled for root canal next month.'
+    },
+    {
+      _id: 'ch_3',
+      patientEmail: 'user',
+      doctorName: 'Dr. Hasan Mahmud',
+      specialty: 'Ophthalmology',
+      date: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString(),
+      reason: 'Dry eyes',
+      diagnosis: 'Dry Eye Syndrome',
+      prescription: 'Systane Ultra Eye Drops',
+      notes: 'Patient responded well to initial drops.'
+    }
+  ],
   payments: [
     {
       _id: 'pay_1',
@@ -381,6 +416,40 @@ export const mockDb = {
       campFees: 50,
       date: new Date().toISOString(),
       status: 'success'
+    }
+  ],
+  feedbacks: [
+    {
+      _id: 'fb_1',
+      participantName: 'Fatima Akter',
+      participantEmail: 'fatima@example.com',
+      rating: 5,
+      comment: 'The OPD live queue system is amazing! I booked my token online and didn’t have to wait in line at Dr. Hasan Mahmud’s chamber. Highly recommended!',
+      serviceName: 'Ophthalmology OPD'
+    },
+    {
+      _id: 'fb_2',
+      participantName: 'Rahim Sheikh',
+      participantEmail: 'rahim@example.com',
+      rating: 5,
+      comment: 'Dr. A.K. Azad was incredibly thorough during my cardiac checkup. The estimated waiting time feature on MediQueue was spot on.',
+      serviceName: 'Cardiology OPD'
+    },
+    {
+      _id: 'fb_3',
+      participantName: 'Nusrat Jahan',
+      participantEmail: 'nusrat@yahoo.com',
+      rating: 5,
+      comment: 'The pediatric OPD service for my daughter was smooth and stress-free. Very clean hospital facilities and caring doctors.',
+      serviceName: 'Pediatrics OPD'
+    },
+    {
+      _id: 'fb_4',
+      participantName: 'Kamal Hossain',
+      participantEmail: 'kamal@gmail.com',
+      rating: 4,
+      comment: 'Great digital OPD management system. Getting a token took less than 30 seconds and receptionist staff were very helpful.',
+      serviceName: 'General OPD'
     }
   ]
 };

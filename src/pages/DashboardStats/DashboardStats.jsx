@@ -7,6 +7,7 @@ import {
 import { DollarSign, Hash, Stethoscope, Ticket, Calendar, ArrowRight, Activity, Sparkles, User } from 'lucide-react';
 import useAuth from '../../hooks/useAuth/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure/useAxiosSecure';
+import { mockDb } from '../../mockData/mockDb';
 
 const StatCard = ({ title, value, subtext, icon, color = 'blue' }) => (
     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 transition-all hover:shadow-md hover:-translate-y-0.5">
@@ -21,7 +22,7 @@ const StatCard = ({ title, value, subtext, icon, color = 'blue' }) => (
     </div>
 );
 
-const Analytics = () => {
+const DashboardStats = () => {
     const { user, loading: authLoading } = useAuth();
     const axiosSecure = useAxiosSecure();
 
@@ -30,8 +31,7 @@ const Analytics = () => {
         queryKey: ['participantRegistrations', user?.email],
         enabled: !authLoading && !!user?.email,
         queryFn: async () => {
-            const { data } = await axiosSecure.get(`/participants/email/${user?.email || 'user'}`);
-            return data;
+            return mockDb.registeredCamps.filter(c => c.participant_email === user?.email || c.participant_email === 'user');
         },
     });
 
@@ -39,22 +39,21 @@ const Analytics = () => {
     const { data: tokens = [] } = useQuery({
         queryKey: ['queueTokens'],
         queryFn: async () => {
-            const res = await axiosSecure.get('/queue-tokens');
-            return res.data;
+            return mockDb.queueTokens;
         }
     });
 
     const myTokens = tokens.filter(t => t.patientEmail === user?.email || t.patientEmail === 'user');
 
     const summaryStats = useMemo(() => {
-        const totalSpent = registrations.reduce((acc, reg) => acc + (parseFloat(reg.campFees || reg.camp_fee || 0)), 0);
-        const campsAttended = registrations.length;
+        const totalTokens = myTokens.length;
+        const emergencyTokens = myTokens.filter(t => t.isEmergency).length;
         const activeTokensCount = myTokens.filter(t => t.status === 'Waiting' || t.status === 'Calling' || t.status === 'In Consultation').length;
         const completedTokensCount = myTokens.filter(t => t.status === 'Completed').length;
 
         return {
-            totalSpent: `$${totalSpent.toFixed(2)}`,
-            campsAttended,
+            totalTokens,
+            emergencyTokens,
             activeTokensCount,
             completedTokensCount,
         };
@@ -62,10 +61,10 @@ const Analytics = () => {
 
     // Chart Data
     const chartData = [
-        { month: 'Jun', spending: 50, opdTokens: 1 },
-        { month: 'Jul', spending: 80, opdTokens: 2 },
-        { month: 'Aug', spending: 120, opdTokens: 3 },
-        { month: 'Sep', spending: 60, opdTokens: 1 },
+        { month: 'Jun', opdTokens: 1 },
+        { month: 'Jul', opdTokens: 2 },
+        { month: 'Aug', opdTokens: 3 },
+        { month: 'Sep', opdTokens: 1 },
     ];
 
     if (regLoading || authLoading) {
@@ -73,7 +72,7 @@ const Analytics = () => {
     }
 
     return (
-        <div className="bg-slate-50 min-h-screen space-y-8 pb-16">
+        <div className="space-y-8">
             {/* --- WELCOME HERO BANNER (SOFT MEDICAMP LIGHT GRADIENT) --- */}
             <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] p-8 rounded-3xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
@@ -90,7 +89,7 @@ const Analytics = () => {
 
                 {/* DIRECT OPD DOCTOR ACCESS BUTTON */}
                 <Link
-                    to="/Dashboard/BrowseDoctors"
+                    to="/user/dashboard/BrowseDoctors"
                     className="px-6 py-3.5 bg-[#1e74d2] text-white font-bold text-sm rounded-2xl shadow-md hover:bg-[#185dab] transition-all flex items-center gap-2 cursor-pointer shrink-0"
                 >
                     <Stethoscope className="w-5 h-5" />
@@ -102,28 +101,28 @@ const Analytics = () => {
             {/* --- STATS GRID --- */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard 
-                  title="Total Spent" 
-                  value={summaryStats.totalSpent} 
-                  subtext="Medical camp fees & OPD" 
-                  icon={<DollarSign className="w-5 h-5"/>} 
+                  title="Total Tokens" 
+                  value={summaryStats.totalTokens} 
+                  subtext="All your queue tokens" 
+                  icon={<Ticket className="w-5 h-5"/>} 
                 />
                 <StatCard 
                   title="Active Queue Tokens" 
                   value={`${summaryStats.activeTokensCount} Tokens`} 
                   subtext="Live OPD waiting line" 
-                  icon={<Ticket className="w-5 h-5"/>} 
+                  icon={<Activity className="w-5 h-5"/>} 
                 />
                 <StatCard 
-                  title="Camps Registered" 
-                  value={summaryStats.campsAttended} 
-                  subtext="Outreach health camps" 
-                  icon={<Calendar className="w-5 h-5"/>} 
+                  title="Emergency Tokens" 
+                  value={summaryStats.emergencyTokens} 
+                  subtext="High priority visits" 
+                  icon={<Sparkles className="w-5 h-5"/>} 
                 />
                 <StatCard 
                   title="OPD Consultations" 
                   value={summaryStats.completedTokensCount} 
                   subtext="Doctor sessions completed" 
-                  icon={<Activity className="w-5 h-5"/>} 
+                  icon={<Stethoscope className="w-5 h-5"/>} 
                 />
             </div>
 
@@ -140,7 +139,7 @@ const Analytics = () => {
                 </div>
 
                 <Link
-                    to="/Dashboard/MyQueueTokens"
+                    to="/user/dashboard/MyQueueTokens"
                     className="px-5 py-2.5 bg-blue-50 text-[#1e74d2] font-bold text-xs rounded-xl hover:bg-blue-100 transition-all flex items-center gap-1.5 whitespace-nowrap"
                 >
                     <span>View My Queue Tokens</span>
@@ -152,21 +151,21 @@ const Analytics = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
                     <h3 className="text-xl font-bold text-slate-800 mb-2 poppins">Activity & OPD Trends</h3>
-                    <p className="text-xs text-slate-500 mb-6">Monthly overview of OPD consultation tokens and health camp spending.</p>
+                    <p className="text-xs text-slate-500 mb-6">Monthly overview of your OPD consultation tokens.</p>
                     <div className="h-72">
                         <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={chartData}>
                                 <defs>
-                                    <linearGradient id="colorSpend" x1="0" y1="0" x2="0" y2="1">
+                                    <linearGradient id="colorTokens" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor="#1e74d2" stopOpacity={0.8}/>
                                         <stop offset="95%" stopColor="#1e74d2" stopOpacity={0}/>
                                     </linearGradient>
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                                 <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} />
-                                <YAxis stroke="#94a3b8" fontSize={12} />
+                                <YAxis stroke="#94a3b8" allowDecimals={false} fontSize={12} />
                                 <Tooltip contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', borderColor: '#e2e8f0' }} />
-                                <Area type="monotone" dataKey="spending" name="Camp Fees ($)" stroke="#1e74d2" fillOpacity={1} fill="url(#colorSpend)" strokeWidth={2} />
+                                <Area type="monotone" dataKey="opdTokens" name="OPD Tokens" stroke="#1e74d2" fillOpacity={1} fill="url(#colorTokens)" strokeWidth={2} />
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>
@@ -196,7 +195,7 @@ const Analytics = () => {
                     </div>
 
                     <Link
-                        to="/Dashboard/BrowseDoctors"
+                        to="/user/dashboard/BrowseDoctors"
                         className="mt-6 w-full text-center py-3 bg-[#1e74d2] text-white font-bold text-xs rounded-xl shadow hover:bg-[#185dab] transition-all block"
                     >
                         + Book New Doctor Token
@@ -207,4 +206,4 @@ const Analytics = () => {
     );
 };
 
-export default Analytics;
+export default DashboardStats;

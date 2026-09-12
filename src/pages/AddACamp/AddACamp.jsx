@@ -113,9 +113,16 @@ const AddACamp = () => {
   };
 
   return (
-    <div className="w-12/12 mx-auto">
-      <h1 className="text-4xl font-extrabold text-slate-800 text-center mb-2"> Add A Medical Camp</h1>
-      <p className="text-center text-slate-500 mb-10">Please fill in all the required details carefully.</p>
+    <div className="space-y-6">
+      <div className="bg-gradient-to-br from-[#e5f2fa] to-[#a7d4f9] p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+        <span className="bg-[#1e74d2] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+          Camp Management
+        </span>
+        <h1 className="text-3xl font-extrabold poppins text-slate-800 mt-2">
+          Add A Medical Camp
+        </h1>
+        <p className="text-slate-600 text-sm mt-1 inter">Please fill in all the required details carefully.</p>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className='grid md:grid md:grid-cols-5 gap-4'>
